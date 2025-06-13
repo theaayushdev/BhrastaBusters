@@ -11,12 +11,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Image.asset(
             'assets/twoflag.png',
-            height: 40,
+            height: 60,
           ),
-          const SizedBox(width: 40),
+          const SizedBox(width: 10),
           const Text(
             'BhrastaBusters',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white,
+            fontWeight: FontWeight.w600, 
+              fontSize: 20,                
+              fontFamily: 'Roboto',),
           ),
         ],
       ),

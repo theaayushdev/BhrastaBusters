@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bhrastabusters/widget/topbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'package:bhrastabusters/screens/secondpage.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
@@ -14,21 +17,29 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
+  late AnimationController _blinkController;
 
   final List<String> _imagePaths = [
     'assets/pic1.jpeg',
     'assets/pic2.jpg',
-    'assets/pic3.jpeg',
-    'assets/pic4.jpeg',
-    'assets/pic5.jpeg',
+    'assets/pic6.png',
+    'assets/pic7.png',
+    'assets/pic8.png',
   ];
 
   @override
   void initState() {
     super.initState();
+
+    _blinkController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    )..repeat(reverse: true);
+
     Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < _imagePaths.length - 1) {
         _currentPage++;
@@ -46,13 +57,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _pageController.dispose();
+    _blinkController.dispose();
     super.dispose();
   }
 
   Future<void> _fetchTokenAndNavigate() async {
     try {
       final response = await http.get(
-Uri.parse('http://172.16.3.155:5000/GenerateToken')
+        Uri.parse('http://172.16.3.155:5000/GenerateToken'),
       );
 
       if (response.statusCode == 200) {
@@ -60,7 +72,7 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SecondWidget(token: token), 
+            builder: (context) => SecondWidget(token: token),
           ),
         );
       } else {
@@ -74,19 +86,7 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF003893),
-        title: Row(
-          children: [
-            Image.asset('assets/twoflag.png', height: 40),
-            const SizedBox(width: 40),
-            const Text(
-              'BhrastaSprasta',
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      ),
+appBar: CustomAppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -108,18 +108,20 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
               title: const Text('Emergency Info'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => Emergency()));
               },
             ),
             ListTile(
-              leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
+              leading: const Icon(Icons.question_answer,
+                  color: Color(0xFF003893)),
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => FAQPage()));
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.info, color: Color(0xFF003893)),
               title: const Text('Report'),
@@ -131,8 +133,6 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
                 );
               },
             ),
-          
-
           ],
         ),
       ),
@@ -154,12 +154,57 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
             ),
           ),
           const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF003893),
+                    ),
+                    child: AnimatedTextKit(
+                      isRepeatingAnimation: false,
+                      totalRepeatCount: 1,
+                      animatedTexts: [
+                        TyperAnimatedText(
+                          'To the people, For the people, By the people',
+                          speed: Duration(milliseconds: 50),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AnimatedBuilder(
+                  animation: _blinkController,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _blinkController.value,
+                      child: const Text(
+                        '|',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF003893),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
           TextButton(
             onPressed: _fetchTokenAndNavigate,
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: const Color(0xFF003893),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: const Text('Emergency', style: TextStyle(fontSize: 16)),
           ),
