@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
 import 'package:bhrastabusters/widget/topbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class SecondWidget extends StatefulWidget {
   final String token;
@@ -42,17 +45,10 @@ class _SecondWidgetState extends State<SecondWidget> {
 
   String? selectedDistrict;
   String? selectedDepartment;
-  File? _selectedImage;
+  
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-    }
-  }
+
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -67,6 +63,54 @@ class _SecondWidgetState extends State<SecondWidget> {
       });
     }
   }
+  Future<void> submitReport()async{
+    if(selectedDepartment==null||selectedDistrict==null||_dateController.text.isEmpty)
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please fill all fields")
+        ),
+      );
+      return;
+    }
+    final report = {
+      "department": selectedDepartment!,
+      "location": selectedDistrict!,
+      "date_of_corruption": _dateController.text,
+ 
+      "token": widget.token,
+      "device_id": "flutter-device-001"
+    };
+
+    final response = await http.post(
+      Uri.parse("http://<your-ip>:5000/report"), // ✅ Replace with your actual IP
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(report),
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Report Submitted"),
+          content: Text("Token: ${result['token']}\nCredibility Score: ${result['credibility_score']}"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            )
+          ],
+        ),
+      );
+    } else {
+      print("Error: ${response.body}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to submit report.")),
+      );
+    }
+  }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,39 +165,10 @@ class _SecondWidgetState extends State<SecondWidget> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _pickImage,
-                child: Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: _selectedImage != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.image_outlined, size: 50, color: Colors.grey[600]),
-                            const SizedBox(height: 10),
-                            Text(
-                              'Tap to select an image',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
+             
+          
+                
+            
               const SizedBox(height: 20),
               const Text(
                 'Select Date:',
@@ -190,10 +205,24 @@ class _SecondWidgetState extends State<SecondWidget> {
               ),
               const SizedBox(height: 20),
               Text('Token: ${widget.token}'),
+                     const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+               
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color(0xFF003893),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                child: const Text('Next', style: TextStyle(fontSize: 16)),
+              ),
             ],
           ),
         ),
+        
       ),
+      
     );
   }
 }
