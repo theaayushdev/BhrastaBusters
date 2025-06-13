@@ -69,6 +69,11 @@ def submit_report():
     except Exception as e:
         print("Error in /report:", e)
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/status/<token>", methods=["GET"])
+def get_status(token):
+    cursor.execute("SELECT status, credibility_score FROM reports WHERE token = ?", (token,))
+    report = cursor.fetchone()
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
