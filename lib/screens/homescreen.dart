@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SecondWidget()),
