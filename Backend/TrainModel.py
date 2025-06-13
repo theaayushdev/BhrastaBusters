@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import re
 import joblib
 
-df = pd.read_csv('TrainModel.csv')
+df = pd.read_csv('Backend/Trainingdata.csv')
 
 #cleaning the text
 def clean_text(text):
@@ -15,7 +15,7 @@ def clean_text(text):
     text = re.sub(r'[^a-zA-Z\s]', '', text)
     return text.strip()
 
-df[clean_text] = df['text'].apply(clean_text)
+df["clean_text"] = df["text"].apply(clean_text)
 
 #converting data to numerical format
 vec = TfidfVectorizer(ngram_range=(1, 2), max_features=8000)
@@ -28,3 +28,12 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_
 #training the model
 model = LogisticRegression(class_weight="balanced", max_iter=1000)
 model.fit(X_train, Y_train)
+
+#evaluation
+preds = model.predict(X_test)
+print("Accuracy:", accuracy_score(Y_test, preds))
+
+#save vectorizer + model
+joblib.dump(vec, "Backend/ml/vectorizer.pkl")
+joblib.dump(model,"Backend/ml/model.pkl")
+
