@@ -1,23 +1,25 @@
+// homepage.dart
 import 'dart:async';
+import 'package:bhrastabusters/screens/secondpage.dart';
 import 'package:flutter/material.dart';
-import 'information.dart'; 
-import '../widget/topbar.dart'; 
-//import 'reporting1.dart';
-class FirstPage extends StatefulWidget {
-  const FirstPage({super.key});
+import 'information.dart';
 
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+  
   @override
-  State<FirstPage> createState() => _FirstPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _FirstPageState extends State<FirstPage> {
+class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
   final List<String> _imagePaths = [
     'assets/pic1.jpeg',
     'assets/pic2.jpg',
     'assets/pic3.jpeg',
-    'assets/pic4.jpeg',
+    'assets/pic4.jpeg', 
     'assets/pic5.jpeg',
   ];
 
@@ -51,10 +53,7 @@ class _FirstPageState extends State<FirstPage> {
         backgroundColor: const Color(0xFF003893),
         title: Row(
           children: [
-            Image.asset(
-              'assets/twoflag.png',
-              height: 40,
-            ),
+            Image.asset('assets/twoflag.png', height: 40),
             const SizedBox(width: 40),
             const Text(
               'BhrastaSprasta',
@@ -64,11 +63,10 @@ class _FirstPageState extends State<FirstPage> {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
+          children: [
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.white),
               child: Text(
                 'Navigation',
@@ -76,42 +74,42 @@ class _FirstPageState extends State<FirstPage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home, color: Color(0xFF003893)),
-              title: Text('Section 1'),
+              leading: const Icon(Icons.home, color: Color(0xFF003893)),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
             ListTile(
-              leading: Icon(Icons.info, color: Color(0xFF003893)),
-              title: Text('Section 2'),
+              leading: const Icon(Icons.info, color: Color(0xFF003893)),
+              title: const Text('Emergency Info'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SecondWidget()),
+                );
+              },
             ),
-            ListTile(
-              leading: Icon(Icons.settings, color: Color(0xFF003893)),
-              title: Text('Section 3'),
-            ),
-            ListTile(
-              leading: Icon(Icons.contact_mail, color: Color(0xFF003893)),
-              title: Text('Section 4'),
-            ),
+            // Add more ListTiles if needed
           ],
         ),
       ),
       body: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.zero,
-            child: SizedBox(
-              height: 150,
-              width: double.infinity,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _imagePaths.length,
-                itemBuilder: (context, index) {
-                  return Image.asset(
-                    _imagePaths[index],
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  );
-                },
-              ),
+          SizedBox(
+            height: 150,
+            width: double.infinity,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _imagePaths.length,
+              itemBuilder: (context, index) {
+                return Image.asset(
+                  _imagePaths[index],
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                );
+              },
             ),
           ),
           const SizedBox(height: 20),
@@ -119,9 +117,7 @@ class _FirstPageState extends State<FirstPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => Emergency (),
-                ),
+                MaterialPageRoute(builder: (context) => SecondWidget()),
               );
             },
             style: TextButton.styleFrom(
@@ -129,10 +125,7 @@ class _FirstPageState extends State<FirstPage> {
               backgroundColor: const Color(0xFF003893),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-            child: const Text(
-              'Test',
-              style: TextStyle(fontSize: 16),
-            ),
+            child: const Text('Emergency', style: TextStyle(fontSize: 16)),
           ),
         ],
       ),
