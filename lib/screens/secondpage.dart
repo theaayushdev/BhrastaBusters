@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SecondWidget extends StatefulWidget {
-  final String token; // ✅ ADDED: token parameter
+  final String token;
 
-  const SecondWidget({super.key, required this.token}); // ✅ UPDATED constructor
+  const SecondWidget({super.key, required this.token});
 
   @override
   State<SecondWidget> createState() => _SecondWidgetState();
@@ -28,6 +28,7 @@ class _SecondWidgetState extends State<SecondWidget> {
     'Salyan', 'Surkhet', 'Western Rukum', 'Achham', 'Baitadi', 'Bajhang',
     'Bajura', 'Dadeldhura', 'Darchula', 'Doti', 'Kailali', 'Kanchanpur'
   ];
+
   final List<String> departments = [
     'Traffic', 'Electricity', 'DrinkingWater', 'NepalPolice', 'Malpot (Land Revenue)',
     'Municipality Office', 'Transport Department', 'Passport Department',
@@ -36,6 +37,8 @@ class _SecondWidgetState extends State<SecondWidget> {
     'Telecom Services', 'Hydrology and Meteorology', 'Social Welfare',
     'Election Commission', 'Consumer Rights Office',
   ];
+
+  final TextEditingController _dateController = TextEditingController();
 
   String? selectedDistrict;
   String? selectedDepartment;
@@ -51,13 +54,27 @@ class _SecondWidgetState extends State<SecondWidget> {
     }
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView( // ✅ Allow scrolling if needed
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +86,7 @@ class _SecondWidgetState extends State<SecondWidget> {
               DropdownButton<String>(
                 value: selectedDepartment,
                 isExpanded: true,
-                hint: const Text('Choose a department'), // ✅ fixed label
+                hint: const Text('Choose a department'),
                 items: departments.map((dept) {
                   return DropdownMenuItem<String>(
                     value: dept,
@@ -91,7 +108,7 @@ class _SecondWidgetState extends State<SecondWidget> {
               DropdownButton<String>(
                 value: selectedDistrict,
                 isExpanded: true,
-                hint: const Text('Choose a district'), // ✅ fixed label
+                hint: const Text('Choose a district'),
                 items: districts.map((district) {
                   return DropdownMenuItem<String>(
                     value: district,
@@ -127,20 +144,52 @@ class _SecondWidgetState extends State<SecondWidget> {
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.image_outlined,
-                                size: 50, color: Colors.grey[600]),
+                            Icon(Icons.image_outlined, size: 50, color: Colors.grey[600]),
                             const SizedBox(height: 10),
                             Text(
                               'Tap to select an image',
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 16),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 16),
                             ),
                           ],
                         ),
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Token: ${widget.token}'), 
+              const Text(
+                'Select Date:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade400),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _dateController.text.isEmpty
+                            ? 'Tap to select a date'
+                            : _dateController.text,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: _dateController.text.isEmpty ? Colors.grey : Colors.black,
+                        ),
+                      ),
+                      const Icon(Icons.calendar_today, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text('Token: ${widget.token}'),
             ],
           ),
         ),
