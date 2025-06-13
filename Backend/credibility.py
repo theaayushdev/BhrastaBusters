@@ -3,6 +3,7 @@ import re
 from langdetect import detect
 from googletrans import Translator
 from indic_transliteration.sanscript import transliterate, ITRANS, DEVANAGARI
+import csv
 
 vectorizer = joblib.load("Backend/ml/vectorizer.pkl")
 model = joblib.load("Backend/ml/model.pkl")
@@ -14,6 +15,22 @@ common_nepali_words = [
     "karyalayako","karyalayama ko","karyalayako kaam","maghcha","magchha","magyo","maghdai","kaam","kaam","khayo","lagyo","lagcha",
     "ghatana","ghatna","hunchha","huncha","hunechha","ghhus","ghus khori","loksewa","parhari"
 ]
+
+def load_common_names(csv_file="ml/common_names.csv"):
+    name = set()
+    try:
+        with open(csv_file, 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row:  # Check if the row is not empty
+                    name.add(row["name"].strip().lower())
+
+    except Exception as e:
+       print("Error loading names:", e)
+       return name
+    
+common_names = load_common_names()
+
 
 def is_romanized_nepali(text):
     count = sum(1 for word in common_nepali_words if word in text.lower())
