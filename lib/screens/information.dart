@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../widget/topbar.dart';
 class Emergency extends StatelessWidget
 
 
@@ -29,12 +29,7 @@ class Emergency extends StatelessWidget
   
   {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text('Nepal Emergency Info'),
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

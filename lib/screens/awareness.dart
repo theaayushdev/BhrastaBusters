@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../widget/topbar.dart';
 
 class AwarenessPage extends StatelessWidget {
   void _openLink(String url) async {
@@ -15,7 +16,7 @@ class AwarenessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Awareness & Education')),
+      appBar: CustomAppBar(),
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
