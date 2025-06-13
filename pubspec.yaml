@@ -90,3 +90,8 @@ flutter:
 
   assets:
     - assets/twoflag.png
+    - assets/pic1.jpeg
+    - assets/pic2.jpg
+    - assets/pic3.jpeg
+    - assets/pic4.jpeg
+    - assets/pic5.jpeg

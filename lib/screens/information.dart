@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class emergency extends StatelessWidget 
+class Emergency extends StatelessWidget 
 
 
 {
