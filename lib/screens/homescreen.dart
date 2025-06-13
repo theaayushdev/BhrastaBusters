@@ -5,6 +5,7 @@ import 'package:bhrastabusters/screens/secondpage.dart';
 import 'package:flutter/material.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
+import '../screens/report.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -101,6 +102,17 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => FAQPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info, color: Color(0xFF003893)),
+              title: const Text('Report'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReportPage()),
                 );
               },
             ),
