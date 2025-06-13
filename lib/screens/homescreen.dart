@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:bhrastabusters/screens/secondpage.dart';
 import 'package:flutter/material.dart';
-import 'information.dart';
+import '../screens/information.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SecondWidget()),
+                  MaterialPageRoute(builder: (context) => Emergency()),
                 );
               },
             ),
