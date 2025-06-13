@@ -22,11 +22,11 @@ def is_romanized_nepali(text):
 def smart_translate(text):
     try:
         lang = detect(text)
-        if lang == 'ne':
-            translated = translator.translate(text, dest='en').text 
+        if lang == "ne":
+            translated = translator.translate(text, dest="en").text
             return translated
-        
-    # If English but contains Nepali words
+
+        # If English but contains Nepali words
         if lang == "en" and is_romanized_nepali(text):
             try:
                 devanagari = transliterate(text, ITRANS, DEVANAGARI)
@@ -34,12 +34,12 @@ def smart_translate(text):
                 return translated
             except Exception :
                  pass
-            
-         # If just English 
+
+        # If just English 
         return translator.translate(text, dest="en").text
-            
+
     except Exception:
-        return text 
+        return text  
     
 def clean_text(text):
     text = text.lower()
@@ -58,3 +58,9 @@ def score_text(text):
     prob = model.predict_proba(vec)[0][1]
     return round(prob, 2)
     
+
+if __name__ == "__main__":
+    report = input("Enter your report: ")
+    score = score_text(report)
+
+    print(f"Credibility score: {score}")
