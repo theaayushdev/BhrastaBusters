@@ -32,21 +32,43 @@ def generate_token():
 @app.route("/score", methods=["POST"])
 @limiter.limit("3 per day") 
 def submit_report():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    device_id = data.get("device_id")
-    if not device_id:
-        return jsonify({"error": "Missing device_id"}), 400
+        device_id = data.get("device_id")
+        if not device_id:
+            return jsonify({"error": "Missing device_id"}), 400
+        
+        departmnt = data.get("department")
+        location = data.get("location")
+        date  = data.get("date")
+        description = data.get("description")
+        media = data.get("media", "")
+        token = data.get("token")
+
+        if not all([departmnt, location, date, description, media]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        status = "pending"
+        timestamp = datetime.now().isoformat()
+        credibility = score_text(description)
+
+        cursor.execute("""
+            INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (departmnt, location, date, description, media, token, status, credibility, device_id, timestamp))
+        conn.commit()
+
+        print(f"Report submitted by device {device_id} with token {token}")
+        return jsonify({
+            "message": "Report submitted successfully",
+            "token": token,
+            "credibility_score": credibility
+        }), 200
     
-    departmnt = data.get("department", "")
-    location = data.get("location", "")
-    description = data.get("description", "")
-    media = data.get("media", "")
-    token = str(uuid.uuid4())
-    status = "pending"
-    timestamp = datetime.now().isoformat()
-
-    credibility = score_text(description)
+    except Exception as e:
+        print("Error in /report:", e)
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
