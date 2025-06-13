@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:bhrastabusters/screens/secondpage.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
+import '../screens/report.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -118,6 +119,20 @@ Uri.parse('http://172.16.3.155:5000/GenerateToken')
                 Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
               },
             ),
+
+            ListTile(
+              leading: const Icon(Icons.info, color: Color(0xFF003893)),
+              title: const Text('Report'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ReportPage()),
+                );
+              },
+            ),
+          
+
           ],
         ),
       ),
