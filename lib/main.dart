@@ -107,7 +107,7 @@ class _FirstPageState extends State<FirstPage> {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyWidget()),
+                  MaterialPageRoute(builder: (context) => const FirstPage()),
                 );
               },
             ),
@@ -154,7 +154,7 @@ class _FirstPageState extends State<FirstPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const MyWidget(),
+                  builder: (context) => const FirstPage(),
                 ),
               );
             },
