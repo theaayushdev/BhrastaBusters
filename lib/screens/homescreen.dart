@@ -127,6 +127,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: const Text('Emergency', style: TextStyle(fontSize: 16)),
           ),
+          const SizedBox(height:20),
+          TextButton(onPressed: ()
+          {
+            Navigator.push(context, MaterialPageRoute(builder:(context)=>Emergency()),
+            ); 
+          }, child: Text('Hello'))
         ],
       ),
     );
