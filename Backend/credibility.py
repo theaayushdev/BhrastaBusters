@@ -41,3 +41,20 @@ def smart_translate(text):
     except Exception:
         return text 
     
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r'\d+', '<num>', text)  
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    return text.strip()
+
+def score_text(text):
+    text = smart_translate(text)
+    cleaned = clean_text(text)
+    vec = vectorizer.transform([cleaned])
+
+    if vec.nnz == 0:
+        return 0.0
+    
+    prob = model.predict_proba(vec)[0][1]
+    return round(prob, 2)
+    
