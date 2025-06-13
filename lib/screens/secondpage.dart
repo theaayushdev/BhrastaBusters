@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:bhrastabusters/widget/topbar.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SecondWidget extends StatefulWidget {
    SecondWidget({super.key});
@@ -25,14 +27,27 @@ class _SecondWidgetState extends State<SecondWidget> {
     'Salyan', 'Surkhet', 'Western Rukum', 'Achham', 'Baitadi', 'Bajhang', 
     'Bajura', 'Dadeldhura', 'Darchula', 'Doti', 'Kailali', 'Kanchanpur'
   ];
+  String? selectedDistrict;
 
   final List<String> department=['Traffic','Electricity','DrinkingWater','NepalPolice','Malpot (Land Revenue)','Municipality Office','Transport Department','Passport Department','Immigration Office',
   'Tax Office','Health Post','Education Office','Forestry Office','District Administration Office','Court','Telecom Services','Hydrology and Meteorology',
   'Social Welfare','Election Commission',
   'Consumer Rights Office',];
+  Future<void> _pickImage() async {
+  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    setState(() {
+      _selectedImage = File(pickedFile.path);
+    });
+  }
+}
    String? selectedDepartment;
+      File? _selectedImage;
+  final ImagePicker _picker = ImagePicker();
+
 
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -61,6 +76,60 @@ class _SecondWidgetState extends State<SecondWidget> {
                 });
               },
             ),
+                        const Text(
+              'Select District:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 10),
+            DropdownButton<String>(
+              value: selectedDistrict,
+              isExpanded: true,
+              hint: const Text('Choose a department'),
+             items: districts.map((dept) {
+                return DropdownMenuItem<String>(
+                  value: dept,
+                  child: Text(dept),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  selectedDistrict = value;
+                });
+              },
+            ),
+            GestureDetector(
+  onTap: _pickImage,
+  child: Container(
+    width: double.infinity,
+    height: 200,
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      border: Border.all(color: Colors.grey.shade400),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: _selectedImage != null
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Image.file(
+              _selectedImage!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.image_outlined,
+                  size: 50, color: Colors.grey[600]),
+              const SizedBox(height: 10),
+              Text(
+                'Tap to select an image',
+                style: TextStyle(color: Colors.grey[600], fontSize: 16),
+              ),
+            ],
+          ),
+  ),
+),
           ],
         ),
       ),
