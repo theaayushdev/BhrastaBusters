@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.bhrastabusters"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "29.0.13599879"
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
