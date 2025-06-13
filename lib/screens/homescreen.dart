@@ -1,14 +1,14 @@
-// homepage.dart
-//draw ma do for routing
 import 'dart:async';
-import 'package:bhrastabusters/screens/secondpage.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:bhrastabusters/screens/secondpage.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     'assets/pic1.jpeg',
     'assets/pic2.jpg',
     'assets/pic3.jpeg',
-    'assets/pic4.jpeg', 
+    'assets/pic4.jpeg',
     'assets/pic5.jpeg',
   ];
 
@@ -46,6 +46,28 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchTokenAndNavigate() async {
+    try {
+      final response = await http.get(
+Uri.parse('http://172.16.3.155:5000/GenerateToken')
+      );
+
+      if (response.statusCode == 200) {
+        final token = jsonDecode(response.body)['token'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SecondWidget(token: token), 
+          ),
+        );
+      } else {
+        print("Failed to fetch token. Status: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching token: $e");
+    }
   }
 
   @override
@@ -78,33 +100,24 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: const Icon(Icons.home, color: Color(0xFF003893)),
               title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
+              onTap: () => Navigator.pop(context),
             ),
             ListTile(
               leading: const Icon(Icons.info, color: Color(0xFF003893)),
               title: const Text('Emergency Info'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Emergency()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
               },
             ),
-               ListTile(
-              leading: const Icon(Icons.info, color: Color(0xFF003893)),
+            ListTile(
+              leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => FAQPage()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
               },
             ),
-          
           ],
         ),
       ),
@@ -127,12 +140,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20),
           TextButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SecondWidget()),
-              );
-            },
+            onPressed: _fetchTokenAndNavigate,
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: const Color(0xFF003893),
@@ -140,12 +148,6 @@ class _HomePageState extends State<HomePage> {
             ),
             child: const Text('Emergency', style: TextStyle(fontSize: 16)),
           ),
-          const SizedBox(height:20),
-          TextButton(onPressed: ()
-          {
-            Navigator.push(context, MaterialPageRoute(builder:(context)=>Emergency()),
-            ); 
-          }, child: Text('Hello'))
         ],
       ),
     );
