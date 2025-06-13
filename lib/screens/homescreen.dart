@@ -1,8 +1,10 @@
 // homepage.dart
+//draw ma do for routing
 import 'dart:async';
 import 'package:bhrastabusters/screens/secondpage.dart';
 import 'package:flutter/material.dart';
 import '../screens/information.dart';
+import '../screens/faq.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -91,7 +93,18 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            // Add more ListTiles if needed
+               ListTile(
+              leading: const Icon(Icons.info, color: Color(0xFF003893)),
+              title: const Text('FAQ'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FAQPage()),
+                );
+              },
+            ),
+          
           ],
         ),
       ),
