@@ -69,6 +69,95 @@ def submit_report():
     except Exception as e:
         print("Error in /report:", e)
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/status/<token>", methods=["GET"])
+def get_status(token):
+    cursor.execute("SELECT status, credibility_score FROM reports WHERE token = ?", (token,))
+    aifaiofjaiosfjaoif
+    laknfskalfnlafnalsfnalskfnasf
+    falklfs
+    afa'f
+    asfa
+    sf
+    af
+    StopAsyncIterationfa
+    finallyaf
+    aiterfa
+    finallyf
+    af
+    StopAsyncIterationa
+    Falsesf
+    finallyf
+    asf
+    assertfas
+    finallyf
+    asf
+    aiterfa
+    sf
+    saf
+    assertsaf
+    assertfsa
+    finallysf
+    saf
+    saf
+    asserta
+    Falsefa
+    sf
+    asf
+    assertas
+    Falsefa
+    sf
+    asf
+    assertas
+    fsa
+    Falsesf
+    asf
+    assertas
+    finallyasfa
+    f
+    aifaiofjaiosfjaoif
+    laknfskalfnlafnalsfnalskfnasf
+    falklfs
+    afa'f
+    asfa
+    sf
+    af
+    StopAsyncIterationfa
+    finallyaf
+    aiterfa
+    finallyf
+    af
+    StopAsyncIterationa
+    Falsesf
+    finallyf
+    asf
+    assertfas
+    finallyf
+    asf
+    aiterfa
+    sf
+    saf
+    assertsaf
+    assertfsa
+    finallysf
+    saf
+    saf
+    asserta
+    Falsefa
+    sf
+    asf
+    assertas
+    Falsefa
+    sf
+    asf
+    assertas
+    fsa
+    Falsesf
+    asf
+    assertas
+    finallyasfa
+    f
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
