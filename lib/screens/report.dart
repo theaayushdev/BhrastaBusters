@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import '../screens/homescreen.dart';
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
 
@@ -14,7 +14,7 @@ class _ReportPageState extends State<ReportPage> {
   final TextEditingController _descriptionController = TextEditingController();
   File? _selectedImage;
 
-  // Pick image from gallery or camera
+  
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile =
@@ -27,10 +27,10 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
-  // Simulate form submission
+ 
   void _submitReport() {
     if (_formKey.currentState!.validate()) {
-      // You can replace this with actual upload logic (e.g., Firebase)
+      
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -99,8 +99,7 @@ class _ReportPageState extends State<ReportPage> {
                 label: const Text("Upload Evidence"),
               ),
               const SizedBox(height: 20),
-
-              ElevatedButton.icon(
+                ElevatedButton.icon(
                 onPressed: _submitReport,
                 icon: const Icon(Icons.send),
                 label: const Text("Submit Report"),
@@ -108,6 +107,22 @@ class _ReportPageState extends State<ReportPage> {
                   backgroundColor: Colors.green,
                 ),
               ),
+ ElevatedButton.icon(
+  onPressed: () {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+      (route) => false,
+    );
+  },
+  icon: const Icon(Icons.cancel),
+  label: const Text("Cancel"),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.red,
+  ),
+),
+
+            
             ],
           ),
         ),
