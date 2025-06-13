@@ -73,33 +73,3 @@ def submit_report():
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
 
-
-afakjnfakfnakjfnkafnafkjlnakjlf
-alkmfmaklsfaf
-faklfmalkf
-a;lmfak;sfmas;KeyboardInterruptafklanflsk
-alkmflkanflkafs
-fakflaknflkasf
-;fmlksndlakfnaslk
-flksmflkasfnklsafna
-kmasfl;knal;kf
-fkamdfl;kansdf
-fkanflkasndf
-aksdnflak;sfn
-akndflskfn
-
-afandkflnaflk
-ak;dfnalnksf
-;',as'f,as'df,a'sdf;1
-fsadknfklasnfla
-ldkafnlksdfnlaksfnals
-adfklnasdlfnasldkf
-'lkansdflkansdf;
-klasndfklandfkla
-'akfnaklsfnklasdnfk;ladsnfalsdknf
-fknasdlkfnaklsfnlasdf
-aklnflkasdnflansflnaklf
-kal;ds,fl;amsdfa
-fad[flasldfasldfmasd
-    ld;asf;kfl;safj;lajsf;asdfjl;anda;dlsf;alf
-    a;kfadsk;fasf]
