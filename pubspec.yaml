@@ -23,6 +23,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+
+
 flutter:
   uses-material-design: true
 
@@ -36,4 +38,10 @@ flutter:
     - assets/pic6.png
     - assets/pic7.png
     - assets/pic8.png
+
+
+
+    
+
+
     
