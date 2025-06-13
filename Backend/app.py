@@ -23,6 +23,11 @@ cursor = conn.cursor()
 def index():
     return "BhrastaBuster API is running!"
 
+@app.route("/GenerateToken", methods=["GET"])
+def generate_token():
+    token = str(uuid.uuid4())
+    return jsonify({"token": token})
+
 #report submisstion 
 @app.route("/score", methods=["POST"])
 @limiter.limit("3 per day") 
@@ -42,3 +47,6 @@ def submit_report():
     timestamp = datetime.now().isoformat()
 
     credibility = score_text(description)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
