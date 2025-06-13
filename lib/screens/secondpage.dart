@@ -49,7 +49,7 @@ class _SecondWidgetState extends State<SecondWidget> {
               value: selectedDepartment,
               isExpanded: true,
               hint: const Text('Choose a department'),
-              items: selectedDepartment.map((dept) {
+             items: department.map((dept) {
                 return DropdownMenuItem<String>(
                   value: dept,
                   child: Text(dept),
