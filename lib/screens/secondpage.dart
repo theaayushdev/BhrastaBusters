@@ -1,11 +1,14 @@
 import 'package:bhrastabusters/widget/topbar.dart';
 import 'package:flutter/material.dart';
 
-class SecondWidget extends StatelessWidget {
+class SecondWidget extends StatefulWidget {
    SecondWidget({super.key});
-  
-  
 
+  @override
+  State<SecondWidget> createState() => _SecondWidgetState();
+}
+
+class _SecondWidgetState extends State<SecondWidget> {
   @override
   final List<String> districts = [
     'Bhojpur', 'Dhankuta', 'Ilam', 'Jhapa', 'Khotang', 'Morang', 'Okhaldhunga', 
@@ -22,10 +25,13 @@ class SecondWidget extends StatelessWidget {
     'Salyan', 'Surkhet', 'Western Rukum', 'Achham', 'Baitadi', 'Bajhang', 
     'Bajura', 'Dadeldhura', 'Darchula', 'Doti', 'Kailali', 'Kanchanpur'
   ];
+
   final List<String> department=['Traffic','Electricity','DrinkingWater','NepalPolice','Malpot (Land Revenue)','Municipality Office','Transport Department','Passport Department','Immigration Office',
   'Tax Office','Health Post','Education Office','Forestry Office','District Administration Office','Court','Telecom Services','Hydrology and Meteorology',
   'Social Welfare','Election Commission',
   'Consumer Rights Office',];
+   String? selectedDepartment;
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
@@ -40,10 +46,10 @@ class SecondWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             DropdownButton<String>(
-              value: department,
+              value: selectedDepartment,
               isExpanded: true,
               hint: const Text('Choose a department'),
-              items: departments.map((dept) {
+              items: selectedDepartment.map((dept) {
                 return DropdownMenuItem<String>(
                   value: dept,
                   child: Text(dept),
