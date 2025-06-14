@@ -114,46 +114,52 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.white),
-              child: Text(
-                'Navigation',
-                style: TextStyle(color: Color(0xFF003893), fontSize: 24),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Color(0xFF003893)),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _selectedIndex = 0;
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info, color: Color(0xFF003893)),
-              title: const Text('Emergency Info'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
-              title: const Text('FAQ'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
-              },
-            ),
-          ],
+     drawer: Theme(
+  data: Theme.of(context).copyWith(
+    canvasColor: Colors.white, // Force white background
+  ),
+  child: Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Text(
+            'Navigation',
+            style: TextStyle(color: Color(0xFF003893), fontSize: 24),
+          ),
         ),
-      ),
+        ListTile(
+          leading: const Icon(Icons.home, color: Color(0xFF003893)),
+          title: const Text('Home'),
+          onTap: () {
+            Navigator.pop(context);
+            setState(() {
+              _selectedIndex = 0;
+            });
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.info, color: Color(0xFF003893)),
+          title: const Text('Emergency Info'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
+          title: const Text('FAQ'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
+          },
+        ),
+      ],
+    ),
+  ),
+),
+
       body: _selectedIndex == 0
           ? Stack(
               children: [
