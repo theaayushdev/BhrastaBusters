@@ -126,72 +126,105 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-       appBar: CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                controller: _descriptionController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  hintText: "Describe the issue",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (val) =>
-                    val == null || val.isEmpty ? "Please enter description" : null,
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: CustomAppBar(),
+    body: Stack(
+      children: [
+        // Faded background image
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Opacity(
+            opacity: 0.08,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height / 2,
+              width: double.infinity,
+              child: Image.asset(
+                'assets/twoflag.png',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _locationController,
-                maxLines: 2,
-                decoration: const InputDecoration(
-                  hintText: "Location",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (val) =>
-                    val == null || val.isEmpty ? "Please enter the location" : null,
-              ),
-              const SizedBox(height: 16),
-
-              // ✅ Preview media files
-              if (_selectedMedia.isNotEmpty)
-                Wrap(
-                  spacing: 8,
-                  children: _selectedMedia.map((file) {
-                    final isImage = file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png');
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      child: isImage
-                          ? Image.file(file, fit: BoxFit.cover)
-                          : const Icon(Icons.videocam, size: 50),
-                    );
-                  }).toList(),
-                )
-              else
-                const Text("No media selected."),
-
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: _pickMedia,
-                icon: const Icon(Icons.upload_file),
-                label: const Text("Upload Images/Videos"),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitReport,
-                child: const Text("Submit Report"),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+
+        // Main content
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: "Describe the issue",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (val) => val == null || val.isEmpty
+                      ? "Please enter description"
+                      : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _locationController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    hintText: "Location",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (val) => val == null || val.isEmpty
+                      ? "Please enter the location"
+                      : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Media preview
+                if (_selectedMedia.isNotEmpty)
+                  Wrap(
+                    spacing: 8,
+                    children: _selectedMedia.map((file) {
+                      final isImage = file.path.endsWith('.jpg') ||
+                          file.path.endsWith('.jpeg') ||
+                          file.path.endsWith('.png');
+                      return Container(
+                        width: 100,
+                        height: 100,
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        child: isImage
+                            ? Image.file(file, fit: BoxFit.cover)
+                            : const Icon(Icons.videocam, size: 50),
+                      );
+                    }).toList(),
+                  )
+                else
+                  const Text("No media selected."),
+
+                const SizedBox(height: 8),
+            ElevatedButton.icon(
+  onPressed: _pickMedia,
+  icon: const Icon(Icons.upload_file, color: Colors.white),
+  label: const Text("Upload Images/Videos"),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFF003893),
+    foregroundColor: Colors.white,
+  ),
+),
+const SizedBox(height: 20),
+ElevatedButton(
+  onPressed: _submitReport,
+  child: const Text("Submit Report"),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFF003893),
+    foregroundColor: Colors.white,
+  ),
+),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }

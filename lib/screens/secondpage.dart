@@ -32,11 +32,19 @@ class _SecondPageState extends State<SecondPage> {
   "Western Rukum"
 ];
 
-  final List<String> departments = [
-  "Department of Agriculture", "Department of Education", "Department of Forest and Soil Conservation",
-  "Department of Health Services", "Department of Hydrology and Meteorology", "Department of Immigration",
-  "Department of Roads", "Department of Tourism", "Department of Transport Management",
-  "Department of Water Supply", "Nepal Electricity Authority", "Survey Department"
+final List<String> departments = [
+  "Agriculture",
+  "Education",
+  "Forest and Soil Conservation",
+  "Health Services",
+  "Hydrology and Meteorology",
+  "Immigration",
+  "Roads",
+  "Tourism",
+  "Transport Management",
+  "Water Supply",
+  "Nepal Electricity Authority",
+  "Survey Department"
 ];
 
 
@@ -127,47 +135,78 @@ class _SecondPageState extends State<SecondPage> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                children: [
-                  DropdownButtonFormField<String>(
-                    value: selectedDistrict,
-                    hint: const Text("Select District"),
-                    items: districts
-                        .map((d) => DropdownMenuItem(
-                              value: d,
-                              child: Text(d),
-                            ))
-                        .toList(),
-                    onChanged: (value) =>
-                        setState(() => selectedDistrict = value),
-                  ),
-                  const SizedBox(height: 20),
-                  DropdownButtonFormField<String>(
-                    value: selectedDepartment,
-                    hint: const Text("Select Department"),
-                    items: departments
-                        .map((d) => DropdownMenuItem(
-                              value: d,
-                              child: Text(d),
-                            ))
-                        .toList(),
-                    onChanged: (value) =>
-                        setState(() => selectedDepartment = value),
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _dateController,
-                    readOnly: true,
-                    onTap: () => _selectDate(context),
-                    decoration: const InputDecoration(
-                      hintText: "Select Date",
-                      suffixIcon: Icon(Icons.calendar_today),
-                    ),
-                  ),
-                  const SizedBox(height: 180), // Leave space for button
-                ],
-              ),
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const Text(
+      "Select District",
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 8),
+    DropdownButtonFormField<String>(
+      value: selectedDistrict,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      hint: const Text("Choose a district"),
+      items: districts
+          .map((d) => DropdownMenuItem(
+                value: d,
+                child: Text(d),
+              ))
+          .toList(),
+      onChanged: (value) => setState(() => selectedDistrict = value),
+    ),
+    const SizedBox(height: 20),
+
+    const Text(
+      "Select Department",
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 8),
+    DropdownButtonFormField<String>(
+      value: selectedDepartment,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      hint: const Text("Choose a department"),
+      items: departments
+          .map((d) => DropdownMenuItem(
+                value: d,
+                child: Text(d),
+              ))
+          .toList(),
+      onChanged: (value) => setState(() => selectedDepartment = value),
+    ),
+    const SizedBox(height: 20),
+
+    const Text(
+      "Select Date",
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    ),
+    const SizedBox(height: 8),
+    TextField(
+      controller: _dateController,
+      readOnly: true,
+      onTap: () => _selectDate(context),
+      decoration: InputDecoration(
+        hintText: "Tap to select a date",
+        suffixIcon: const Icon(Icons.calendar_today),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+    ),
+    const SizedBox(height: 180),
+  ],
+),
+
             ),
           ),
 
