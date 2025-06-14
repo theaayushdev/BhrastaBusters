@@ -190,52 +190,62 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
                       const SizedBox(height: 30),
 
-                      // Animated text with cursor closely aligned
+                      // Responsive animated text with blinking cursor
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Center(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DefaultTextStyle(
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF003893),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth,
                                 ),
-                                child: AnimatedTextKit(
-                                  isRepeatingAnimation: false,
-                                  totalRepeatCount: 1,
-                                  animatedTexts: [
-                                    TyperAnimatedText(
-                                      'To the people, For the people, By the people',
-                                      speed: Duration(milliseconds: 50),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              AnimatedBuilder(
-                                animation: _blinkController,
-                                builder: (context, child) {
-                                  return Opacity(
-                                    opacity: _blinkController.value,
-                                    child: const Text(
-                                      '|',
-                                      style: TextStyle(
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    DefaultTextStyle(
+                                      style: const TextStyle(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xFF003893),
                                       ),
+                                      child: AnimatedTextKit(
+                                        isRepeatingAnimation: false,
+                                        totalRepeatCount: 1,
+                                        animatedTexts: [
+                                          TyperAnimatedText(
+                                            'To the people,\n For the people,\n By the people.',
+                                            speed: Duration(milliseconds: 50),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
+                                    AnimatedBuilder(
+                                      animation: _blinkController,
+                                      builder: (context, child) {
+                                        return Opacity(
+                                          opacity: _blinkController.value,
+                                          child: const Text(
+                                            '|',
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF003893),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 200),
+                      const SizedBox(height: 200), // Leave space for buttons
                     ],
                   ),
                 ),
