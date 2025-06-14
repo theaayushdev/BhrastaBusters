@@ -1,9 +1,24 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import '../screens/homescreen.dart';
+
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+  final String token;
+  final String department;
+  final String district;
+  final String date;
+  final String deviceId;
+
+  const ReportPage({
+    super.key,
+    required this.token,
+    required this.department,
+    required this.district,
+    required this.date,
+    required this.deviceId,
+  });
 
   @override
   State<ReportPage> createState() => _ReportPageState();
@@ -14,115 +29,96 @@ class _ReportPageState extends State<ReportPage> {
   final TextEditingController _descriptionController = TextEditingController();
   File? _selectedImage;
 
-  
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile =
-        await picker.pickImage(source: ImageSource.gallery); // Or camera
-
-    if (pickedFile != null) {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = File(picked.path);
       });
     }
   }
 
- 
-  void _submitReport() {
+  Future<void> _submitReport() async {
     if (_formKey.currentState!.validate()) {
-      
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Report Submitted"),
-          content: const Text("Thank you for reporting anonymously."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _descriptionController.clear();
-                setState(() => _selectedImage = null);
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
-  }
+      String mediaBase64 = "";
+      if (_selectedImage != null) {
+        List<int> imageBytes = await _selectedImage!.readAsBytes();
+        mediaBase64 = base64Encode(imageBytes);
+      }
 
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
+      final Map<String, dynamic> payload = {
+        "department": widget.department,
+        "location": widget.district,
+        "date": widget.date,
+        "description": _descriptionController.text,
+        "media": mediaBase64,
+        "device_id": widget.deviceId,
+      };
+
+      final response = await http.post(
+        Uri.parse("http://YOUR_IP_ADDRESS:5000/report"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Success"),
+            content: Text("Report submitted.\nToken: ${data['token']}"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to submit report")),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Report Corruption")),
+      appBar: AppBar(title: const Text("Final Step: Submit Report")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
-              const Text(
-                "Describe the issue (no personal info needed):",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 5,
                 decoration: const InputDecoration(
+                  hintText: "Describe the issue",
                   border: OutlineInputBorder(),
-                  hintText: 'E.g., A bribe was demanded at XYZ office...',
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Please describe the issue' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? "Please enter description" : null,
               ),
-              const SizedBox(height: 20),
-
-              const Text(
-                "Attach photo or document (optional):",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _selectedImage != null
-                  ? Image.file(_selectedImage!, height: 200)
-                  : const Text("No file selected."),
+                  ? Image.file(_selectedImage!)
+                  : const Text("No image selected."),
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 onPressed: _pickImage,
-                icon: const Icon(Icons.upload_file),
-                label: const Text("Upload Evidence"),
+                icon: const Icon(Icons.upload),
+                label: const Text("Upload Image"),
               ),
               const SizedBox(height: 20),
-                ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: _submitReport,
-                icon: const Icon(Icons.send),
-                label: const Text("Submit Report"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                ),
-              ),
- ElevatedButton.icon(
-  onPressed: () {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-      (route) => false,
-    );
-  },
-  icon: const Icon(Icons.cancel),
-  label: const Text("Cancel"),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.red,
-  ),
-),
-
-            
+                child: const Text("Submit Report"),
+              )
             ],
           ),
         ),
