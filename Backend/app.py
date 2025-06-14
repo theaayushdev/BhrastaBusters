@@ -29,24 +29,54 @@ def generate_token():
     return jsonify({"token": token})
 
 #report submisstion 
+@app.route("/report", methods=["POST"])
+@limiter.limit("5 per day")  # Limit to 5 requests per day
+
 @app.route("/score", methods=["POST"])
-@limiter.limit("3 per day") 
-def submit_report():
-    data = request.get_json()
+def get_score():
+    try:
+        data = request.get_json()
 
-    device_id = data.get("device_id")
-    if not device_id:
-        return jsonify({"error": "Missing device_id"}), 400
+        device_id = data.get("device_id")
+        if not device_id:
+            return jsonify({"error": "Missing device_id"}), 400
+        
+        departmnt = data.get("department")
+        location = data.get("district")
+        date  = data.get("date")
+        description = data.get("description")
+        media = data.get("media", "")
+        token = data.get("token")
+
+        if not all([departmnt, location, date, description, media]):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        status = "pending"
+        timestamp = datetime.now().isoformat()
+        credibility = score_text(description)
+
+        cursor.execute("""
+            INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (departmnt, location, date, description, media, token, status, credibility, device_id, timestamp))
+        conn.commit()
+
+        print(f"Report submitted by device {device_id} with token {token}")
+        return jsonify({
+            "message": "Report submitted successfully",
+            "token": token,
+            "credibility_score": credibility
+        }), 200
     
-    departmnt = data.get("department", "")
-    location = data.get("location", "")
-    description = data.get("description", "")
-    media = data.get("media", "")
-    token = str(uuid.uuid4())
-    status = "pending"
-    timestamp = datetime.now().isoformat()
-
-    credibility = score_text(description)
+    except Exception as e:
+        print("Error in /report:", e)
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/status/<token>", methods=["GET"])
+def get_status(token):
+    cursor.execute("SELECT status, credibility_score FROM reports WHERE token = ?", (token,))
+    report = cursor.fetchone()
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
+

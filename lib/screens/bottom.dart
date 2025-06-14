@@ -47,9 +47,12 @@ class BottomNavBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Info'),
-        BottomNavigationBarItem(icon: Icon(Icons.question_answer), label: 'FAQ'),
+        
+       
         BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Report'),
+        BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Info'),
+         BottomNavigationBarItem(icon: Icon(Icons.question_answer), label: 'FAQ'),
+        
       ],
     );
   }

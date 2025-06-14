@@ -97,15 +97,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       switch (index) {
         case 1:
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) =>  Emergency()));
+              
+              context, MaterialPageRoute(builder: (_) =>  ReportPage()));
           break;
         case 2:
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) =>  FAQPage()));
+              
+              context, MaterialPageRoute(builder: (_) =>  Emergency()));
           break;
         case 3:
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) =>  ReportPage()));
+              
+              context, MaterialPageRoute(builder: (_) =>  FAQPage()));
           break;
       }
     }
