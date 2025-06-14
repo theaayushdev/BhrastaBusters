@@ -99,8 +99,24 @@ def submit_report():
     
 @app.route("/status/<token>", methods=["GET"])
 def get_status(token):
-    cursor.execute("SELECT status, credibility_score FROM reports WHERE token = ?", (token,))
-    report = cursor.fetchone()
+    try:
+        cursor.execute("SELECT status, credibility_score FROM reports WHERE token = ?", (token,))
+        report = cursor.fetchone()
+
+        if report:
+            return jsonify({
+                "token": token,
+                "status": report[0],
+            }), 200
+
+        else:
+            return jsonify({"error": "Report not found"}), 404
+        
+    except Exception as e:
+        return jsonify({
+            "error": "An error occurred while retrieving the report.",
+            "details": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
