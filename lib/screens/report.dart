@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'homescreen.dart';
 
 class ReportPage extends StatefulWidget {
   final String token;
@@ -40,50 +41,52 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Future<void> _submitReport() async {
-    if (_formKey.currentState!.validate()) {
-      String mediaBase64 = "";
-      if (_selectedImage != null) {
-        List<int> imageBytes = await _selectedImage!.readAsBytes();
-        mediaBase64 = base64Encode(imageBytes);
-      }
+  if (_formKey.currentState!.validate()) {
+    final uri = Uri.parse("http://172.16.3.155:5000/report");
+    var request = http.MultipartRequest('POST', uri);
 
-      final Map<String, dynamic> payload = {
-        "department": widget.department,
-        "location": widget.district,
-        "date": widget.date,
-        "description": _descriptionController.text,
-        "media": mediaBase64,
-        "device_id": widget.deviceId,
-      };
+    request.fields['department'] = widget.department;
+    request.fields['location'] = widget.district;
+    request.fields['date'] = widget.date;
+    request.fields['description'] = _descriptionController.text;
+    request.fields['device_id'] = widget.deviceId;
 
-      final response = await http.post(
-        Uri.parse("http://172.16.3.155:5000/report"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(payload),
+    if (_selectedImage != null) {
+      request.files.add(await http.MultipartFile.fromPath('media', _selectedImage!.path));
+    }
+
+    var response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(responseBody);
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Success"),
+          content: Text("Report submitted.\nToken: ${data['token']}"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomePage()),
+                  (route) => false, // Remove all previous routes
+                );
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        ),
       );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("Success"),
-            content: Text("Report submitted.\nToken: ${data['token']}"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to submit report")),
-        );
-      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
