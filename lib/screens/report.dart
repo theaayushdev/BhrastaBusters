@@ -31,10 +31,9 @@ class _ReportPageState extends State<ReportPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  
+
   List<File> _selectedMedia = [];
 
-  // ✅ Replaces old _pickImage
   Future<void> _pickMedia() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -49,7 +48,7 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
-    Future<void> _submitReport() async {
+  Future<void> _submitReport() async {
     if (_formKey.currentState!.validate()) {
       final uri = Uri.parse("http://172.16.3.155:5000/report");
       var request = http.MultipartRequest('POST', uri);
@@ -83,7 +82,7 @@ class _ReportPageState extends State<ReportPage> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Report submitted.\nNote :This is important for further status checking\nToken:"),
+                const Text("Report submitted.\nNote: This is important for further status checking\nToken:"),
                 const SizedBox(height: 8),
                 SelectableText(
                   generatedToken,
@@ -114,9 +113,11 @@ class _ReportPageState extends State<ReportPage> {
         );
       }
     }
-  } 
-    
+  }
 
+  void _cancel() {
+    Navigator.of(context).pop();
+  }
 
   @override
   void dispose() {
@@ -126,105 +127,227 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: CustomAppBar(),
-    body: Stack(
-      children: [
-        // Faded background image
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Opacity(
-            opacity: 0.08,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              width: double.infinity,
-              child: Image.asset(
-                'assets/twoflag.png',
-                fit: BoxFit.cover,
+  Widget build(BuildContext context) {
+    final themeColor = const Color(0xFF003893);
+
+    return Scaffold(
+      appBar: CustomAppBar(),
+      body: Stack(
+        children: [
+          // Faded background image
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Opacity(
+              opacity: 0.08,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 2,
+                width: double.infinity,
+                child: Image.asset(
+                  'assets/twoflag.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-        ),
-
-        // Main content
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  controller: _descriptionController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    hintText: "Describe the issue",
-                    border: OutlineInputBorder(),
+          Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 450),
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Card(
+                  color: Colors.white.withOpacity(0.98),
+                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                  validator: (val) => val == null || val.isEmpty
-                      ? "Please enter description"
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _locationController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    hintText: "Location",
-                    border: OutlineInputBorder(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Text(
+                              "Submit a Report",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: themeColor,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          TextFormField(
+                            controller: _descriptionController,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              hintText: "Describe the issue",
+                              labelText: "Description",
+                              labelStyle: TextStyle(color: Colors.grey.shade800),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              filled: true,
+                              fillColor: Colors.grey[50],
+                            ),
+                            validator: (val) => val == null || val.isEmpty
+                                ? "Please enter description"
+                                : null,
+                          ),
+                          const SizedBox(height: 18),
+                          TextFormField(
+                            controller: _locationController,
+                            maxLines: 2,
+                            decoration: InputDecoration(
+                              hintText: "Location",
+                              labelText: "Location",
+                              labelStyle: TextStyle(color: Colors.grey.shade800),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              filled: true,
+                              fillColor: Colors.grey[50],
+                            ),
+                            validator: (val) => val == null || val.isEmpty
+                                ? "Please enter the location"
+                                : null,
+                          ),
+                          const SizedBox(height: 18),
+                          const Text(
+                            "Media Attachments",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(height: 7),
+                          _selectedMedia.isNotEmpty
+                              ? Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: _selectedMedia.map((file) {
+                                    final isImage = file.path.endsWith('.jpg') ||
+                                        file.path.endsWith('.jpeg') ||
+                                        file.path.endsWith('.png');
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          width: 90,
+                                          height: 90,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(9),
+                                            border: Border.all(color: Colors.grey.shade300),
+                                            color: Colors.grey[100],
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(9),
+                                            child: isImage
+                                                ? Image.file(file, fit: BoxFit.cover)
+                                                : const Icon(Icons.videocam, size: 40, color: Colors.grey),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 2,
+                                          right: 2,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedMedia.remove(file);
+                                              });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(30),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.3),
+                                                    blurRadius: 2,
+                                                  )
+                                                ],
+                                              ),
+                                              child: const Icon(Icons.close, size: 18, color: Colors.red),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  }).toList(),
+                                )
+                              : const Padding(
+                                  padding: EdgeInsets.only(bottom: 8),
+                                  child: Text("No media selected.",
+                                      style: TextStyle(color: Colors.grey)),
+                                ),
+                          const SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: _pickMedia,
+                            icon: const Icon(Icons.upload_file, color: Colors.white),
+                            label: const Text("Upload Images/Videos"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: themeColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _submitReport,
+                                  child: const Text("Submit Report"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: themeColor,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 2,
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: _cancel,
+                                  child: const Text("Cancel"),
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.red,
+                                    side: const BorderSide(color: Colors.red, width: 2),
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // Add a bottom spacer so the logo is always visible!
+                          const SizedBox(height: 60),
+                        ],
+                      ),
+                    ),
                   ),
-                  validator: (val) => val == null || val.isEmpty
-                      ? "Please enter the location"
-                      : null,
                 ),
-                const SizedBox(height: 16),
-
-                // Media preview
-                if (_selectedMedia.isNotEmpty)
-                  Wrap(
-                    spacing: 8,
-                    children: _selectedMedia.map((file) {
-                      final isImage = file.path.endsWith('.jpg') ||
-                          file.path.endsWith('.jpeg') ||
-                          file.path.endsWith('.png');
-                      return Container(
-                        width: 100,
-                        height: 100,
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: isImage
-                            ? Image.file(file, fit: BoxFit.cover)
-                            : const Icon(Icons.videocam, size: 50),
-                      );
-                    }).toList(),
-                  )
-                else
-                  const Text("No media selected."),
-
-                const SizedBox(height: 8),
-            ElevatedButton.icon(
-  onPressed: _pickMedia,
-  icon: const Icon(Icons.upload_file, color: Colors.white),
-  label: const Text("Upload Images/Videos"),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF003893),
-    foregroundColor: Colors.white,
-  ),
-),
-const SizedBox(height: 20),
-ElevatedButton(
-  onPressed: _submitReport,
-  child: const Text("Submit Report"),
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF003893),
-    foregroundColor: Colors.white,
-  ),
-),
-              ],
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
