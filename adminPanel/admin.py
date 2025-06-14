@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, render_template_string, make_response, send_file
+from xhtml2pdf import pisa
+import base64
+import io
+import base64
 import sqlite3
 import os
 import matplotlib
@@ -53,15 +57,24 @@ def view_reports():
     os.makedirs(graph_dir, exist_ok=True)
 
     loc_graph_path = os.path.join(graph_dir, 'location_graph.png')
-    plt.figure(figsize=(10, 4))
-    plt.bar(district, district_counts, color='skyblue')
-    plt.xlabel('Location')
-    plt.ylabel('Number of Reports')
-    plt.title('Reports by district')
-    plt.xticks(rotation=45, ha='right')
+    
+    plt.figure(figsize=(12, 5))
+    bars = plt.bar(district, district_counts, color='#3b82f6', edgecolor='black')
+
+    # Add data labels on top of each bar
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.3, yval, ha='center', va='bottom', fontsize=9)
+
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+    plt.xlabel('District', fontsize=12, weight='bold')
+    plt.ylabel('Number of Reports', fontsize=12, weight='bold')
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
     plt.tight_layout()
     plt.savefig(loc_graph_path)
     plt.close()
+
 
     # Generate Department Graph 
     cursor.execute("""
@@ -77,11 +90,10 @@ def view_reports():
     dept_counts = [count for _, count in filtered_dept_data]
 
     dept_graph_path = os.path.join(graph_dir, 'department_graph.png')
-    plt.figure(figsize=(10, 4))
-    plt.bar(departments, dept_counts, color='orange')
+    plt.figure(figsize=(12, 5))
+    plt.bar(departments, dept_counts, color='orange',edgecolor='black')
     plt.xlabel('Department')
     plt.ylabel('Number of Reports')
-    plt.title('Reports by Department')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.savefig(dept_graph_path)
@@ -106,5 +118,78 @@ def update_status(report_id):
     conn.close()
     return redirect('/')
 
+
+@app.route("/report/pdf/<int:report_id>")
+def generate_pdf(report_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, department, district, location, description, media, token, status, 
+               credibility_score, device_id, timestamp 
+        FROM reports
+        WHERE id = ?
+    """, (report_id,))
+    report = cursor.fetchone()
+    conn.close()
+
+    if not report:
+        return "Report not found", 404
+
+    # Load first image and convert to base64
+    image_base64 = ""
+    if report[5]:
+        first_image = report[5].split(",")[0]
+        image_path = os.path.abspath(os.path.join("Backend", "media", first_image))
+        if os.path.exists(image_path):
+            with open(image_path, "rb") as img_file:
+                image_base64 = base64.b64encode(img_file.read()).decode("utf-8")
+
+    # Inline HTML with base64 image
+    html_template = """
+    <html>
+    <head>
+        <style>
+            body { font-family: DejaVu Sans, sans-serif; }
+            h1 { color: #1d4ed8; }
+            p { line-height: 1.5; }
+            img { max-width: 500px; margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <h1>BhrastaBusters Report</h1>
+        <p><strong>Report ID:</strong> {{ r[0] }}</p>
+        <p><strong>Department:</strong> {{ r[1] }}</p>
+        <p><strong>District:</strong> {{ r[2] }}</p>
+        <p><strong>Location:</strong> {{ r[3] }}</p>
+        <p><strong>Description:</strong> {{ r[4] }}</p>
+        <p><strong>Status:</strong> {{ r[7] }}</p>
+        <p><strong>Credibility Score:</strong> {{ r[8] }}</p>
+        <p><strong>Device ID:</strong> {{ r[9] }}</p>
+        <p><strong>Timestamp:</strong> {{ r[10] }}</p>
+        {% if image_base64 %}
+        <p><strong>Attached Media:</strong></p>
+        <img src="data:image/jpeg;base64,{{ image_base64 }}">
+        {% endif %}
+    </body>
+    </html>
+    """
+
+    rendered_html = render_template_string(html_template, r=report, image_base64=image_base64)
+
+    # ➕ Create PDF in memory
+    pdf_buffer = io.BytesIO()
+    result = pisa.CreatePDF(rendered_html, dest=pdf_buffer)
+
+    if result.err:
+        return "Error generating PDF", 500
+
+    pdf_buffer.seek(0)
+    return send_file(
+        pdf_buffer,
+        download_name=f"report_{report_id}.pdf",
+        as_attachment=True,
+        mimetype='application/pdf'
+    )
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # Run on a different port if needed
+    app.run(debug=True, port=5001)  
