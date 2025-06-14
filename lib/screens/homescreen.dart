@@ -4,7 +4,7 @@ import 'package:bhrastabusters/widget/topbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
-
+import '../screens/awareness.dart';
 import 'package:bhrastabusters/screens/secondpage.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
       break;
     case 1:
-      Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => AwarenessPage()));
       break;
     case 2:
       Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
@@ -299,7 +299,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Report'),
+            BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Awareness'),
           BottomNavigationBarItem(icon: Icon(Icons.emergency), label: 'Emergency'),
           BottomNavigationBarItem(icon: Icon(Icons.question_answer), label: 'FAQ'),
         ],
