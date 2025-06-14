@@ -1,4 +1,4 @@
-// lib/widget/bottom_nav.dart
+
 import 'package:flutter/material.dart';
 import '../screens/homescreen.dart';
 import '../screens/information.dart';
