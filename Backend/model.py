@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS reports (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             department TEXT,
             location TEXT,
-            date TEXT
+            date TEXT,
             description TEXT,
             media TEXT,
             token TEXT,

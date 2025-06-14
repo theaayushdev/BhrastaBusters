@@ -43,6 +43,7 @@ def submit_report():
         departmnt = data.get("department", "")
         location = data.get("location", "")
         description = data.get("description", "")
+        date = data.get("date", "")
         media = data.get("media", "")
         token = str(uuid.uuid4())
         status = "pending"
