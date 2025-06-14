@@ -13,7 +13,7 @@ common_nepali_words = [
     "paisa","rupiya", "paise", "rupaye", "rupiya", "rupaiya", "rupaiye","ghus","ghuskhori","le","diyo","diye","sarkari",
     "sarkari kaam","sarkari karyalaya","sarkari karmachari","sarkari adhikari","karmachari","adhikari","karyalaya","karyalayama",
     "karyalayako","karyalayama ko","karyalayako kaam","maghcha","magchha","magyo","maghdai","kaam","kaam","khayo","lagyo","lagcha",
-    "ghatana","ghatna","hunchha","huncha","hunechha","ghhus","ghus khori","loksewa","parhari"
+    "ghatana","ghatna","hunchha","huncha","hunechha","ghhus","ghus khori","loksewa","prahari"
 ]
 
 def load_common_names(csv_file="Backend/ml/common_names.csv"):
