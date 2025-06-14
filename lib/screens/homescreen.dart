@@ -226,7 +226,8 @@ Padding(
                                         totalRepeatCount: 1,
                                         animatedTexts: [
                                           TyperAnimatedText(
-                                            '\nTo the people,\n For the people,\n By the people.',
+                                            'To the people,\nfor the people,\nby the people.',
+                                            textAlign: TextAlign.center,
                                             speed: Duration(milliseconds: 50),
                                           ),
                                         ],
