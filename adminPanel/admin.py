@@ -30,20 +30,21 @@ def view_reports():
         GROUP BY district
         ORDER BY count DESC
     """)
-    location_data = cursor.fetchall()
+    district_data = cursor.fetchall()
 
-    locations = [row[0] for row in location_data]
-    location_counts = [row[1] for row in location_data]
+    filtered_district_data = [(loc, count) for loc, count in district_data if loc is not None]
+    district = [loc for loc, _ in filtered_district_data]
+    district_counts = [count for _, count in filtered_district_data]
 
     graph_dir = os.path.join(os.path.dirname(__file__), 'static', 'graph')
     os.makedirs(graph_dir, exist_ok=True)
 
     loc_graph_path = os.path.join(graph_dir, 'location_graph.png')
     plt.figure(figsize=(10, 4))
-    plt.bar(locations, location_counts, color='skyblue')
+    plt.bar(district, district_counts, color='skyblue')
     plt.xlabel('Location')
     plt.ylabel('Number of Reports')
-    plt.title('Reports by Location')
+    plt.title('Reports by district')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.savefig(loc_graph_path)
@@ -58,8 +59,9 @@ def view_reports():
     """)
     dept_data = cursor.fetchall()
 
-    departments = [row[0] for row in dept_data]
-    dept_counts = [row[1] for row in dept_data]
+    filtered_dept_data = [(dept, count) for dept, count in dept_data if dept is not None]
+    departments = [dept for dept, _ in filtered_dept_data]
+    dept_counts = [count for _, count in filtered_dept_data]
 
     dept_graph_path = os.path.join(graph_dir, 'department_graph.png')
     plt.figure(figsize=(10, 4))

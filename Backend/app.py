@@ -57,14 +57,15 @@ def generate_token():
 def submit_report():
     try:
         # Get uploaded image from form 
-        file = request.files.get("media")
+        files = request.files.getlist("media")
         filenames = []
 
-        if file and file.filename:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            filenames.append(filename)
+        for file in files:
+            if file and file.filename:  # ✅ Check each individual file
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                filenames.append(filename)
 
         media_filename = ",".join(filenames)
 
