@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   File? _selectedImage;
 
   Future<void> _pickImage() async {
@@ -41,52 +41,73 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Future<void> _submitReport() async {
-  if (_formKey.currentState!.validate()) {
-    final uri = Uri.parse("http://172.16.3.155:5000/report");
-    var request = http.MultipartRequest('POST', uri);
+    if (_formKey.currentState!.validate()) {
+      final uri = Uri.parse("http://172.16.3.155:5000/report");
+      var request = http.MultipartRequest('POST', uri);
 
-    request.fields['department'] = widget.department;
-    request.fields['location'] = widget.district;
-    request.fields['date'] = widget.date;
-    request.fields['description'] = _descriptionController.text;
-    request.fields['device_id'] = widget.deviceId;
+      request.fields['department'] = widget.department;
 
-    if (_selectedImage != null) {
-      request.files.add(await http.MultipartFile.fromPath('media', _selectedImage!.path));
-    }
+      // ⚠️ **This was the main issue:**
+      // You took location input from user (_locationController)
+      // but sent `widget.district` instead.
+      // So I fixed it to send `_locationController.text`
+      request.fields['location'] = _locationController.text;
 
-    var response = await request.send();
-    final responseBody = await response.stream.bytesToString();
+      request.fields['date'] = widget.date;
+      request.fields['description'] = _descriptionController.text;
+      request.fields['device_id'] = widget.deviceId;
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(responseBody);
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Success"),
-          content: Text("Report submitted.\nToken: ${data['token']}"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => HomePage()),
-                  (route) => false, // Remove all previous routes
-                );
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
-      );
+      if (_selectedImage != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('media', _selectedImage!.path),
+        );
+      }
+
+      var response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(responseBody);
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Success"),
+            content: Text("Report submitted.\nToken: ${data['token']}"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close dialog
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomePage()),
+                    (route) => false,
+                  );
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+
+        // Optional: clear fields and image after success if you want
+        // _descriptionController.clear();
+        // _locationController.clear();
+        // setState(() => _selectedImage = null);
+
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
+        );
+      }
     }
   }
-}
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    _locationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +128,17 @@ class _ReportPageState extends State<ReportPage> {
                 ),
                 validator: (val) =>
                     val == null || val.isEmpty ? "Please enter description" : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _locationController,
+                maxLines: 2,
+                decoration: const InputDecoration(
+                  hintText: "Location",
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) =>
+                    val == null || val.isEmpty ? "Please enter the location" : null,
               ),
               const SizedBox(height: 16),
               _selectedImage != null
