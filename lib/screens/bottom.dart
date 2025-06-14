@@ -24,9 +24,7 @@ class BottomNavBar extends StatelessWidget {
       case 2:
         targetPage =  FAQPage();
         break;
-      case 3:
-        targetPage =  ReportPage();
-        break;
+   
       default:
         targetPage =  HomePage();
     }

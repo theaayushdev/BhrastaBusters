@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   image_picker: ^1.1.1 # or latest version
   url_launcher: ^6.2.6
+  device_info_plus: ^9.0.3
 
   #image_picker: ^1.0.4
 
