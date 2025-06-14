@@ -21,7 +21,7 @@ class _SecondPageState extends State<SecondPage> {
   final TextEditingController _dateController = TextEditingController();
 
   final List<String> districts = ['Abhinab','Ayush']; // Keep your districts list
-  final List<String> departments = ['Electricity','Water']; // Keep your departments list
+  final List<String> departments = ['Electricity','Water']; 
 
   @override
   void initState() {
