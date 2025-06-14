@@ -30,12 +30,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/twoflag.png
-    - assets/pic1.jpeg
-    - assets/pic2.jpg
-    - assets/pic3.jpeg
-    - assets/pic4.jpeg
-    - assets/pic5.jpeg
-    - assets/pic6.png
+    - assets/pic1.png
+    - assets/pic2.png
+    - assets/pic3.png
+    - assets/pic4.png
     - assets/pic7.png
     - assets/pic8.png
     - assets/toppage.png
