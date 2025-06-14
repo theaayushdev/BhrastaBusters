@@ -20,15 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-
   late AnimationController _blinkController;
 
   final List<String> _imagePaths = [
-    'assets/pic1.jpeg',
-    'assets/pic2.jpg',
-    'assets/pic6.png',
-    'assets/pic7.png',
-    'assets/pic8.png',
+    'assets/toppage.png',
   ];
 
   int _selectedIndex = 0;
@@ -36,7 +31,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _blinkController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
@@ -93,12 +87,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       switch (index) {
         case 1:
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => Emergency()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
           break;
         case 2:
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => FAQPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
           break;
       }
     }
@@ -134,8 +126,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               title: const Text('Emergency Info'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => Emergency()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
               },
             ),
             ListTile(
@@ -143,8 +134,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => FAQPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
               },
             ),
           ],
@@ -153,116 +143,131 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: _selectedIndex == 0
           ? Stack(
               children: [
-                // Background flag image (faded)
-                Positioned.fill(
+                // Faded background image on bottom half
+                Align(
+                  alignment: Alignment.bottomCenter,
                   child: Opacity(
                     opacity: 0.08,
-                    child: Image.asset(
-                      'assets/twoflag.png',
-                      fit: BoxFit.cover,
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: double.infinity,
+                      child: Image.asset(
+                        'assets/twoflag.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
 
-                // Main content
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Sliding images directly below app bar
-                    SizedBox(
-                      height: 160,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: _imagePaths.length,
-                        itemBuilder: (context, index) {
-                          return Image.asset(
-                            _imagePaths[index],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                // Main scrollable content
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 12),
 
-                    // Animated text
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: DefaultTextStyle(
-                              style: const TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF003893),
-                              ),
-                              child: AnimatedTextKit(
-                                isRepeatingAnimation: false,
-                                totalRepeatCount: 1,
-                                animatedTexts: [
-                                  TyperAnimatedText(
-                                    'To the people, For the people, By the people',
-                                    speed: Duration(milliseconds: 50),
-                                  ),
-                                ],
-                              ),
+                      // Sliding Image
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            height: 160,
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: _imagePaths.length,
+                              itemBuilder: (context, index) {
+                                return Image.asset(
+                                  _imagePaths[index],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                );
+                              },
                             ),
                           ),
-                          AnimatedBuilder(
-                            animation: _blinkController,
-                            builder: (context, child) {
-                              return Opacity(
-                                opacity: _blinkController.value,
-                                child: const Text(
-                                  '|',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF003893),
-                                  ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // Animated text with cursor closely aligned
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DefaultTextStyle(
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF003893),
                                 ),
-                              );
-                            },
+                                child: AnimatedTextKit(
+                                  isRepeatingAnimation: false,
+                                  totalRepeatCount: 1,
+                                  animatedTexts: [
+                                    TyperAnimatedText(
+                                      'To the people, For the people, By the people',
+                                      speed: Duration(milliseconds: 50),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              AnimatedBuilder(
+                                animation: _blinkController,
+                                builder: (context, child) {
+                                  return Opacity(
+                                    opacity: _blinkController.value,
+                                    child: const Text(
+                                      '|',
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF003893),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
 
-                    const Spacer(),
+                      const SizedBox(height: 200),
+                    ],
+                  ),
+                ),
 
-                    Center(
-                      child: Column(
-                        children: [
-                          TextButton(
-                            onPressed: _fetchTokenAndNavigate,
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: const Color(0xFF003893),
-                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                            ),
-                            child: const Text('Report',
-                                style: TextStyle(fontSize: 16)),
-                          ),
-                          const SizedBox(height: 16),
-                          TextButton(
-                            onPressed: _fetchTokenAndNavigate,
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: const Color(0xFF003893),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 12),
-                            ),
-                            child: const Text('Status',
-                                style: TextStyle(fontSize: 16)),
-                          ),
-                          const SizedBox(height: 40), // Padding above bottom nav
-                        ],
+                // Buttons at bottom half
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height * 0.15,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      TextButton(
+                        onPressed: _fetchTokenAndNavigate,
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF003893),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        ),
+                        child: const Text('Report', style: TextStyle(fontSize: 16)),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: _fetchTokenAndNavigate,
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF003893),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        ),
+                        child: const Text('Status', style: TextStyle(fontSize: 16)),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             )
