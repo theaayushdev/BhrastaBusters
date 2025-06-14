@@ -176,26 +176,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       const SizedBox(height: 12),
 
                       // Sliding Image
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: SizedBox(
-                            height: 160,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: _imagePaths.length,
-                              itemBuilder: (context, index) {
-                                return Image.asset(
-                                  _imagePaths[index],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(16),
+    child: SizedBox(
+      height: 210,
+      width: double.infinity, 
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: _imagePaths.length,
+        itemBuilder: (context, index) {
+          return Image.asset(
+            _imagePaths[index],
+            fit: BoxFit.cover, // You can use BoxFit.fill if you want no blank space at all
+            width: double.infinity,
+          );
+        },
+      ),
+    ),
+  ),
+),
+
 
                       const SizedBox(height: 30),
 
@@ -215,7 +217,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   children: [
                                     DefaultTextStyle(
                                       style: const TextStyle(
-                                        fontSize: 20.0,
+                                        fontSize: 30.0,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xFF003893),
                                       ),
@@ -224,7 +226,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         totalRepeatCount: 1,
                                         animatedTexts: [
                                           TyperAnimatedText(
-                                            'To the people,\n For the people,\n By the people.',
+                                            '\nTo the people,\n For the people,\n By the people.',
                                             speed: Duration(milliseconds: 50),
                                           ),
                                         ],
@@ -261,7 +263,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
                 // Buttons at bottom half
                 Positioned(
-                  bottom: MediaQuery.of(context).size.height * 0.15,
+                  bottom: MediaQuery.of(context).size.height * 0.085,
                   left: 0,
                   right: 0,
                   child: Column(
@@ -273,9 +275,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           backgroundColor: const Color(0xFF003893),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: const Text('Report', style: TextStyle(fontSize: 16)),
+                        child: const Text('Report', style: TextStyle(fontSize: 30)),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
                       TextButton(
                         onPressed: _navigateToStatusPage,
                         style: TextButton.styleFrom(
@@ -283,7 +285,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           backgroundColor: const Color(0xFF003893),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: const Text('Status', style: TextStyle(fontSize: 16)),
+                        child: const Text('Status', style: TextStyle(fontSize: 30)),
                       ),
                     ],
                   ),
