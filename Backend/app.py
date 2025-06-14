@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
+from flask import send_from_directory
+from werkzeug.utils import secure_filename
+import os
 import sqlite3
 from credibility import score_text
 import uuid
@@ -10,11 +13,30 @@ from datetime import datetime
 app = Flask(__name__)   
 CORS(app)  # Enable CORS for all routes
 
+def get_device_id():
+    return (
+        request.form.get("device_id") or
+        request.args.get("device_id") or
+        request.headers.get("device_id") or
+        request.remote_addr
+    )
+
 limiter = Limiter(
     app=app,
-    key_func=lambda: request.json.get("device_id", "unknown"),  # Use device_id from request
+    key_func=get_device_id,
     default_limits=[]
 )
+
+# File Upload Setup 
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "media")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB max file size
+
+@app.route('/media/<path:filename>')
+def serve_media(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 conn = sqlite3.connect("Backend/db.sqlite3", check_same_thread=False)
 cursor = conn.cursor()
@@ -34,18 +56,24 @@ def generate_token():
 @limiter.limit("3 per day") 
 def submit_report():
     try:
-        data = request.get_json()
+        # Get uploaded image from form 
+        file = request.files.get("media")
+        media_filename = ""
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            media_filename = filename
 
-        device_id = data.get("device_id") 
+        device_id = request.form.get("device_id") 
 
         if not device_id:
             return jsonify({"error": "Missing device_id"}), 400
     
-        departmnt = data.get("department", "")
-        location = data.get("location", "")
-        description = data.get("description", "")
-        date = data.get("date", "")
-        media = data.get("media", "")
+        departmnt = request.form.get("department", "")
+        location = request.form.get("location", "")
+        description = request.form.get("description", "")
+        date = request.form.get("date", "")
         token = str(uuid.uuid4())
         status = "pending"
         timestamp = datetime.now().isoformat()
@@ -55,7 +83,7 @@ def submit_report():
         cursor.execute("""
                 INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (departmnt, location, date, description, media, token, status, credibility, device_id, timestamp))
+            """, (departmnt, location, date, description, media_filename, token, status, credibility, device_id, timestamp))
         conn.commit()
 
         print(f"Report submitted by device {device_id} with token {token}")
