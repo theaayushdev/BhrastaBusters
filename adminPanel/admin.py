@@ -57,15 +57,24 @@ def view_reports():
     os.makedirs(graph_dir, exist_ok=True)
 
     loc_graph_path = os.path.join(graph_dir, 'location_graph.png')
-    plt.figure(figsize=(10, 4))
-    plt.bar(district, district_counts, color='skyblue')
-    plt.xlabel('Location')
-    plt.ylabel('Number of Reports')
-    plt.title('Reports by district')
-    plt.xticks(rotation=45, ha='right')
+    
+    plt.figure(figsize=(12, 5))
+    bars = plt.bar(district, district_counts, color='#3b82f6', edgecolor='black')
+
+    # Add data labels on top of each bar
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, yval + 0.3, yval, ha='center', va='bottom', fontsize=9)
+
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+    plt.xlabel('District', fontsize=12, weight='bold')
+    plt.ylabel('Number of Reports', fontsize=12, weight='bold')
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
     plt.tight_layout()
     plt.savefig(loc_graph_path)
     plt.close()
+
 
     # Generate Department Graph 
     cursor.execute("""
@@ -81,11 +90,10 @@ def view_reports():
     dept_counts = [count for _, count in filtered_dept_data]
 
     dept_graph_path = os.path.join(graph_dir, 'department_graph.png')
-    plt.figure(figsize=(10, 4))
-    plt.bar(departments, dept_counts, color='orange')
+    plt.figure(figsize=(12, 5))
+    plt.bar(departments, dept_counts, color='orange',edgecolor='black')
     plt.xlabel('Department')
     plt.ylabel('Number of Reports')
-    plt.title('Reports by Department')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.savefig(dept_graph_path)
