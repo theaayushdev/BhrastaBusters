@@ -7,6 +7,7 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS reports (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             department TEXT,
+            district TEXT,
             location TEXT,
             date TEXT,
             description TEXT,

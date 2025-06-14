@@ -1,76 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>BhrastaBusters Admin Dashboard</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
         }
-        th, td {
-            border: 1px solid #999;
-            padding: 8px;
-            text-align: center;
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        th {
-            background-color: #eee;
-        }
+
         h1 {
             text-align: center;
+            color: #1f2937;
+            margin-bottom: 10px;
         }
-        select, button {
-            padding: 5px;
+
+        .subheading {
+            text-align: center;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #2563eb;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        tr:hover {
+            background-color: #eef2ff;
+        }
+
+        select {
+            padding: 6px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+        }
+
+        a.media-link {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a.media-link:hover {
+            text-decoration: underline;
+        }
+
+        .graph-section {
+            margin-top: 50px;
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .graph-section h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+        }
+
+        .graph-section img {
+            display: block;
+            max-width: 95%;
+            margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 12px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>BhrastaBusters Reports</h1>
-    <table>
-  <tr>
-    <th>ID</th>
-    <th>Department</th>
-    <th>District</th>
-    <th>Description</th>
-    <th>Media</th>
-    <th>Token</th>
-    <th>Status</th>
-    <th>Credibility</th>
-    <th>Device ID</th>
-    <th>Timestamp</th>
-  </tr>
-  {% for r in reports %}
-  <tr>
-    <td>{{ r[0] }}</td>
-    <td>{{ r[1] }}</td>
-    <td>{{ r[2] }}</td>
-    <td>{{ r[3] }}</td>
-    <td>{{ r[4] }}</td>
-    <td>{{ r[5] }}</td>
-    <td>
-      <form method="POST" action="/update/{{ r[0] }}">
-        <select name="status" onchange="this.form.submit()">
-          <option value="Pending" {% if r[6] == "Pending" %}selected{% endif %}>Pending</option>
-          <option value="In Progress" {% if r[6] == "In Progress" %}selected{% endif %}>In Progress</option>
-          <option value="Resolved" {% if r[6] == "Resolved" %}selected{% endif %}>Resolved</option>
-        </select>
-      </form>
-    </td>
-    <td>{{ r[7] }}</td>
-    <td>{{ r[8] }}</td>
-    <td>{{ r[9] }}</td>
-  </tr>
-  {% endfor %}
-</table>
-<hr>
-<h2 style="text-align:center;">📍 Reports by Location</h2>
-<div style="text-align:center;">
-    <img src="{{ url_for('static', filename='graph/location_graph.png') }}" alt="Location Graph" style="max-width:90%;">
-</div>
+    <div class="container">
+        <h1>BhrastaBusters Admin Dashboard</h1>
+        <p class="subheading">Manage and monitor corruption reports in real time</p>
 
-<h2 style="text-align:center; margin-top: 40px;">🏢 Reports by Department</h2>
-<div style="text-align:center;">
-    <img src="{{ url_for('static', filename='graph/department_graph.png') }}" alt="Department Graph" style="max-width:90%;">
-</div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Department</th>
+                <th>District</th>
+                <th>Description</th>
+                <th>Media</th>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Credibility</th>
+                <th>Device ID</th>
+                <th>Timestamp</th>
+            </tr>
+            {% for r in reports %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td>
+                {% if r[4] %}
+                    {% for file in r[4].split(',') %}
+                    {% set ext = file.split('.')[-1].lower() %}
+                    {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                    <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">
+                    <img src="http://127.0.0.1:5000/media/{{ file }}" alt="{{ file }}" style="height: 60px; margin: 4px; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
+                    </a>
+                    {% elif ext in ['mp4', 'webm'] %}
+                    <video controls style="height: 80px; margin: 4px; border-radius: 4px;">
+                    <source src="http://127.0.0.1:5000/media/{{ file }}" type="video/{{ ext }}">
+                    Your browser does not support the video tag.
+                    </video>
+                    {% else %}
+                    <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">{{ file }}</a>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                <span style="color: gray;">No Media</span>
+                {% endif %}
+                </td>
+                <td>{{ r[5] }}</td>
+                <td>
+                    <form method="POST" action="/update/{{ r[0] }}">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Pending" {% if r[6] == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="In Progress" {% if r[6] == "In Progress" %}selected{% endif %}>In Progress</option>
+                            <option value="Resolved" {% if r[6] == "Resolved" %}selected{% endif %}>Resolved</option>
+                        </select>
+                    </form>
+                </td>
+                <td>{{ r[7] }}</td>
+                <td>{{ r[8] }}</td>
+                <td>{{ r[9] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="graph-section">
+            <h2> Reports by Location</h2>
+            <img src="{{ url_for('static', filename='graph/location_graph.png') }}" alt="Location Graph">
+        </div>
+
+        <div class="graph-section">
+            <h2>Reports by Department</h2>
+            <img src="{{ url_for('static', filename='graph/department_graph.png') }}" alt="Department Graph">
+        </div>
+    </div>
 </body>
 </html>
