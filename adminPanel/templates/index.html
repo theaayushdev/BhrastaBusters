@@ -9,11 +9,11 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f9;
-            color: #333;
+            color: #1f2937;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1250px;
             margin: 40px auto;
             padding: 0 20px;
         }
@@ -21,7 +21,8 @@
         h1 {
             text-align: center;
             color: #1f2937;
-            margin-bottom: 10px;
+            font-size: 36px;
+            margin-bottom: 5px;
         }
 
         .subheading {
@@ -34,8 +35,8 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             border-radius: 8px;
             overflow: hidden;
         }
@@ -44,11 +45,12 @@
             padding: 12px 15px;
             text-align: center;
             font-size: 14px;
+            vertical-align: middle;
         }
 
         th {
-            background-color: #2563eb;
-            color: #fff;
+            background-color: #1d4ed8;
+            color: #ffffff;
             font-weight: 600;
         }
 
@@ -57,28 +59,29 @@
         }
 
         tr:hover {
-            background-color: #eef2ff;
+            background-color: #e0ecff;
         }
 
         select {
-            padding: 6px;
+            padding: 6px 10px;
             font-size: 14px;
             border-radius: 4px;
             border: 1px solid #d1d5db;
         }
 
-        a.media-link {
-            color: #2563eb;
-            text-decoration: none;
+        video, img {
+            border-radius: 6px;
+            margin: 4px;
         }
 
-        a.media-link:hover {
-            text-decoration: underline;
+        .media-thumb {
+            display: inline-block;
+            margin: 2px;
         }
 
         .graph-section {
-            margin-top: 50px;
-            background: #fff;
+            margin-top: 60px;
+            background: #ffffff;
             padding: 30px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -86,8 +89,9 @@
 
         .graph-section h2 {
             text-align: center;
+            font-size: 22px;
             color: #1e3a8a;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .graph-section img {
@@ -99,79 +103,87 @@
         }
 
         @media (max-width: 768px) {
-            th, td {
+            table, th, td {
                 font-size: 12px;
-                padding: 10px;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            .graph-section {
+                padding: 20px 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>BhrastaBusters Admin Dashboard</h1>
-        <p class="subheading">Manage and monitor corruption reports in real time</p>
+        <h1 style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="height: 65px;">
+    BhrastaBusters Admin Dashboard
+    </h1>
+        <p class="subheading">Real-time corruption report management</p>
 
         <table>
             <tr>
-        <th>ID</th>
-        <th>Department</th>
-        <th>District</th>
-        <th>Location</th>
-        <th>Description</th>
-        <th>Media</th>
-        <th>Token</th>
-        <th>Status</th>
-        <th>Credibility</th>
-        <th>Device ID</th>
-        <th>Timestamp</th>
-    </tr>
-    {% for r in reports %}
-    <tr>
-        <td>{{ r[0] }}</td> <!-- ID -->
-        <td>{{ r[1] }}</td> <!-- Department -->
-        <td>{{ r[2] }}</td> <!-- District -->
-        <td>{{ r[3] }}</td> <!-- Location -->
-        <td>{{ r[4] }}</td> <!-- Description -->
-        <td>
-            {% if r[5] %}
-                {% for file in r[5].split(',') %}
-                    {% set ext = file.split('.')[-1].lower() %}
-                    {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
-                        <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">
-                            <img src="http://127.0.0.1:5000/media/{{ file }}" alt="{{ file }}" style="height: 60px; margin: 4px; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
-                        </a>
-                    {% elif ext in ['mp4', 'webm'] %}
-                        <video controls style="height: 80px; margin: 4px; border-radius: 4px;">
-                            <source src="http://127.0.0.1:5000/media/{{ file }}" type="video/{{ ext }}">
-                            Your browser does not support the video tag.
-                        </video>
+                <th>ID</th>
+                <th>Department</th>
+                <th>District</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Media</th>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Credibility</th>
+                <th>Device ID</th>
+                <th>Timestamp</th>
+            </tr>
+            {% for r in reports %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td style="text-align: left;">{{ r[4][:100] }}{% if r[4]|length > 100 %}...{% endif %}</td>
+                <td>
+                    {% if r[5] %}
+                        {% for file in r[5].split(',') %}
+                            {% set ext = file.split('.')[-1].lower() %}
+                            {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                                <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank" class="media-thumb">
+                                    <img src="http://127.0.0.1:5000/media/{{ file }}" alt="{{ file }}" style="height: 60px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
+                                </a>
+                            {% elif ext in ['mp4', 'webm'] %}
+                                <video controls style="height: 80px;" class="media-thumb">
+                                    <source src="http://127.0.0.1:5000/media/{{ file }}" type="video/{{ ext }}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">{{ file }}</a>
+                            {% endif %}
+                        {% endfor %}
                     {% else %}
-                        <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">{{ file }}</a>
+                        <span style="color: gray;">No Media</span>
                     {% endif %}
-                {% endfor %}
-            {% else %}
-                <span style="color: gray;">No Media</span>
-            {% endif %}
-        </td>
-        <td>{{ r[6] }}</td> <!-- Token -->
-        <td>
-            <form method="POST" action="/update/{{ r[0] }}">
-                <select name="status" onchange="this.form.submit()">
-                    <option value="Pending" {% if r[7] == "Pending" %}selected{% endif %}>Pending</option>
-                    <option value="In Progress" {% if r[7] == "In Progress" %}selected{% endif %}>In Progress</option>
-                    <option value="Resolved" {% if r[7] == "Resolved" %}selected{% endif %}>Resolved</option>
-                </select>
-            </form>
-        </td>
-        <td>{{ r[8] }}</td> <!-- Credibility -->
-        <td>{{ r[9] }}</td> <!-- Device ID -->
-        <td>{{ r[10] }}</td> <!-- Timestamp -->
-    </tr>
-    {% endfor %}
+                </td>
+                <td>{{ r[6] }}</td>
+                <td>
+                    <form method="POST" action="/update/{{ r[0] }}">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Pending" {% if r[7] == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="In Progress" {% if r[7] == "In Progress" %}selected{% endif %}>In Progress</option>
+                            <option value="Resolved" {% if r[7] == "Resolved" %}selected{% endif %}>Resolved</option>
+                        </select>
+                    </form>
+                </td>
+                <td>{{ r[8] }}</td>
+                <td>{{ r[9] }}</td>
+                <td>{{ r[10] }}</td>
+            </tr>
+            {% endfor %}
         </table>
 
         <div class="graph-section">
-            <h2> Reports by district</h2>
+            <h2>Reports by District</h2>
             <img src="{{ url_for('static', filename='graph/location_graph.png') }}" alt="Location Graph">
         </div>
 
