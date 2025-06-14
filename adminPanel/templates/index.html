@@ -194,6 +194,9 @@
                     <a href="/report/pdf/{{ r[0] }}" target="_blank" style="text-decoration: none;">
                         📄 PDF
                     </a>
+                     <form method="POST" action="/report/email/{{ r[0] }}">
+                        <button type="submit" class="send-button">📧 Send</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

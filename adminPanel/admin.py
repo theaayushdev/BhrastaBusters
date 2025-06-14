@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, render_template_string, make_response, send_file
 from xhtml2pdf import pisa
+import smtplib
+from email.message import EmailMessage
 import base64
 import io
 import base64
@@ -190,6 +192,77 @@ def generate_pdf(report_id):
         as_attachment=True,
         mimetype='application/pdf'
     )
+
+@app.route("/report/email/<int:report_id>", methods=["POST"])
+def send_report_email(report_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, department, district, location, description, media, token, status, 
+               credibility_score, device_id, timestamp 
+        FROM reports
+        WHERE id = ?
+    """, (report_id,))
+    report = cursor.fetchone()
+    conn.close()
+
+    if not report:
+        return "Report not found", 404
+
+    image_base64 = ""
+    if report[5]:
+        first_image = report[5].split(",")[0]
+        image_path = os.path.abspath(os.path.join("Backend", "media", first_image))
+        if os.path.exists(image_path):
+            with open(image_path, "rb") as img_file:
+                image_base64 = base64.b64encode(img_file.read()).decode("utf-8")
+
+    html_template = """
+    <html><head><style>
+    body { font-family: DejaVu Sans, sans-serif; }
+    h1 { color: #1d4ed8; }
+    p { line-height: 1.5; }
+    img { max-width: 500px; margin-top: 20px; }
+    </style></head><body>
+        <h1>BhrastaBusters Report</h1>
+        <p><strong>Report ID:</strong> {{ r[0] }}</p>
+        <p><strong>Department:</strong> {{ r[1] }}</p>
+        <p><strong>District:</strong> {{ r[2] }}</p>
+        <p><strong>Location:</strong> {{ r[3] }}</p>
+        <p><strong>Description:</strong> {{ r[4] }}</p>
+        <p><strong>Status:</strong> {{ r[7] }}</p>
+        <p><strong>Credibility Score:</strong> {{ r[8] }}</p>
+        <p><strong>Device ID:</strong> {{ r[9] }}</p>
+        <p><strong>Timestamp:</strong> {{ r[10] }}</p>
+        {% if image_base64 %}<p><strong>Attached Media:</strong></p>
+        <img src="data:image/jpeg;base64,{{ image_base64 }}">{% endif %}
+    </body></html>
+    """
+
+    rendered_html = render_template_string(html_template, r=report, image_base64=image_base64)
+    pdf_buffer = io.BytesIO()
+    pisa.CreatePDF(rendered_html, dest=pdf_buffer)
+    pdf_buffer.seek(0)
+
+    EMAIL_ADDRESS = "bhrastabusters@gmail.com"
+    EMAIL_PASSWORD = "evnt auip hqrj gybn"  # Use environment variables in production
+    TO_EMAIL = "abhitml4@gmail.com"
+
+    msg = EmailMessage()
+    msg['Subject'] = f"Corruption Report ID {report[0]}"
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = TO_EMAIL
+    msg.set_content("Please find the attached corruption report submitted via BhrastaBusters.")
+
+    msg.add_attachment(pdf_buffer.read(), maintype='application', subtype='pdf', filename=f'report_{report_id}.pdf')
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+        return f" Report {report_id} emailed to {TO_EMAIL}!"
+    except Exception as e:
+        return f"Failed to send email: {str(e)}", 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)  
