@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'homescreen.dart';
 import '../widget/topbar.dart';
+import 'package:flutter/services.dart';
 
 class ReportPage extends StatefulWidget {
   final String token;
@@ -48,7 +49,7 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
-  Future<void> _submitReport() async {
+    Future<void> _submitReport() async {
     if (_formKey.currentState!.validate()) {
       final uri = Uri.parse("http://172.16.3.155:5000/report");
       var request = http.MultipartRequest('POST', uri);
@@ -60,7 +61,6 @@ class _ReportPageState extends State<ReportPage> {
       request.fields['description'] = _descriptionController.text;
       request.fields['device_id'] = widget.deviceId;
 
-      // ✅ Add all selected media files
       for (var file in _selectedMedia) {
         request.files.add(
           await http.MultipartFile.fromPath('media', file.path),
@@ -72,11 +72,27 @@ class _ReportPageState extends State<ReportPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(responseBody);
+        final generatedToken = data['token'];
+
+        Clipboard.setData(ClipboardData(text: generatedToken));
+
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
             title: const Text("Success"),
-            content: Text("Report submitted.\nToken: ${data['token']}"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Report submitted.\nNote :This is important for further status checking\nToken:"),
+                const SizedBox(height: 8),
+                SelectableText(
+                  generatedToken,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Text("Token copied to clipboard."),
+              ],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
@@ -98,7 +114,9 @@ class _ReportPageState extends State<ReportPage> {
         );
       }
     }
-  }
+  } 
+    
+
 
   @override
   void dispose() {
