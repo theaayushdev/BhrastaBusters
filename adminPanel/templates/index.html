@@ -146,6 +146,7 @@
                 <th>Credibility</th>
                 <th>Device ID</th>
                 <th>Timestamp</th>
+                <th>PDF</th>
             </tr>
             {% for r in reports %}
             <tr>
@@ -188,6 +189,12 @@
                 <td>{{ r[8] }}</td>
                 <td>{{ r[9] }}</td>
                 <td>{{ r[10] }}</td>
+
+                <td>
+                    <a href="/report/pdf/{{ r[0] }}" target="_blank" style="text-decoration: none;">
+                        📄 PDF
+                    </a>
+                </td>
             </tr>
             {% endfor %}
         </table>
