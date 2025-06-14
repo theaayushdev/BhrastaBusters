@@ -113,59 +113,61 @@
 
         <table>
             <tr>
-                <th>ID</th>
-                <th>Department</th>
-                <th>District</th>
-                <th>Description</th>
-                <th>Media</th>
-                <th>Token</th>
-                <th>Status</th>
-                <th>Credibility</th>
-                <th>Device ID</th>
-                <th>Timestamp</th>
-            </tr>
-            {% for r in reports %}
-            <tr>
-                <td>{{ r[0] }}</td>
-                <td>{{ r[1] }}</td>
-                <td>{{ r[2] }}</td>
-                <td>{{ r[3] }}</td>
-                <td>
-                {% if r[4] %}
-                    {% for file in r[4].split(',') %}
+        <th>ID</th>
+        <th>Department</th>
+        <th>District</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Media</th>
+        <th>Token</th>
+        <th>Status</th>
+        <th>Credibility</th>
+        <th>Device ID</th>
+        <th>Timestamp</th>
+    </tr>
+    {% for r in reports %}
+    <tr>
+        <td>{{ r[0] }}</td> <!-- ID -->
+        <td>{{ r[1] }}</td> <!-- Department -->
+        <td>{{ r[2] }}</td> <!-- District -->
+        <td>{{ r[3] }}</td> <!-- Location -->
+        <td>{{ r[4] }}</td> <!-- Description -->
+        <td>
+            {% if r[5] %}
+                {% for file in r[5].split(',') %}
                     {% set ext = file.split('.')[-1].lower() %}
                     {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
-                    <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">
-                    <img src="http://127.0.0.1:5000/media/{{ file }}" alt="{{ file }}" style="height: 60px; margin: 4px; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
-                    </a>
+                        <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">
+                            <img src="http://127.0.0.1:5000/media/{{ file }}" alt="{{ file }}" style="height: 60px; margin: 4px; border-radius: 4px; box-shadow: 0 0 4px rgba(0,0,0,0.1);">
+                        </a>
                     {% elif ext in ['mp4', 'webm'] %}
-                    <video controls style="height: 80px; margin: 4px; border-radius: 4px;">
-                    <source src="http://127.0.0.1:5000/media/{{ file }}" type="video/{{ ext }}">
-                    Your browser does not support the video tag.
-                    </video>
+                        <video controls style="height: 80px; margin: 4px; border-radius: 4px;">
+                            <source src="http://127.0.0.1:5000/media/{{ file }}" type="video/{{ ext }}">
+                            Your browser does not support the video tag.
+                        </video>
                     {% else %}
-                    <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">{{ file }}</a>
+                        <a href="http://127.0.0.1:5000/media/{{ file }}" target="_blank">{{ file }}</a>
                     {% endif %}
-                    {% endfor %}
-                    {% else %}
+                {% endfor %}
+            {% else %}
                 <span style="color: gray;">No Media</span>
-                {% endif %}
-                </td>
-                <td>{{ r[5] }}</td>
-                <td>
-                    <form method="POST" action="/update/{{ r[0] }}">
-                        <select name="status" onchange="this.form.submit()">
-                            <option value="Pending" {% if r[6] == "Pending" %}selected{% endif %}>Pending</option>
-                            <option value="In Progress" {% if r[6] == "In Progress" %}selected{% endif %}>In Progress</option>
-                            <option value="Resolved" {% if r[6] == "Resolved" %}selected{% endif %}>Resolved</option>
-                        </select>
-                    </form>
-                </td>
-                <td>{{ r[7] }}</td>
-                <td>{{ r[8] }}</td>
-                <td>{{ r[9] }}</td>
-            </tr>
-            {% endfor %}
+            {% endif %}
+        </td>
+        <td>{{ r[6] }}</td> <!-- Token -->
+        <td>
+            <form method="POST" action="/update/{{ r[0] }}">
+                <select name="status" onchange="this.form.submit()">
+                    <option value="Pending" {% if r[7] == "Pending" %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if r[7] == "In Progress" %}selected{% endif %}>In Progress</option>
+                    <option value="Resolved" {% if r[7] == "Resolved" %}selected{% endif %}>Resolved</option>
+                </select>
+            </form>
+        </td>
+        <td>{{ r[8] }}</td> <!-- Credibility -->
+        <td>{{ r[9] }}</td> <!-- Device ID -->
+        <td>{{ r[10] }}</td> <!-- Timestamp -->
+    </tr>
+    {% endfor %}
         </table>
 
         <div class="graph-section">
