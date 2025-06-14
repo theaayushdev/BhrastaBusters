@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask import send_from_directory
@@ -53,7 +53,7 @@ def generate_token():
 
 
 @app.route("/report", methods=["POST"])
-@limiter.limit("3 per day") 
+# @limiter.limit("3 per day") 
 def submit_report():
     try:
         # Get uploaded image from form 
@@ -121,6 +121,10 @@ def get_status(token):
             "error": "An error occurred while retrieving the report.",
             "details": str(e)
         }), 500
+    
+@app.route('/external-static/<path:filename>')
+def external_static(filename):
+    return send_from_directory('../adminPanel/static', filename)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
