@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'homescreen.dart';
+import '../widget/topbar.dart';
 
 class ReportPage extends StatefulWidget {
   final String token;
@@ -109,7 +110,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Final Step: Submit Report")),
+       appBar: CustomAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
