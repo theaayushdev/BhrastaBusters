@@ -25,6 +25,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   final List<String> _imagePaths = [
     'assets/toppage.png',
+    'assets/pic1.png',
+    'assets/pic2.png',
+    'assets/pic3.png',
+    'assets/pic4.png',
+
   ];
 
   int _selectedIndex = 0;
