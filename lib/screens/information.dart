@@ -4,17 +4,25 @@ class Emergency extends StatelessWidget
 
 
 {
-  final List<Map<String, String>> policeStations = 
-  [
-    {'city': 'Kathmandu', 'number': '100 or 01-4200600'},
-    {'city': 'Pokhara', 'number': '061-520000'},
-    {'city': 'Biratnagar', 'number': '021-523243'},
-    {'city': 'Butwal', 'number': '071-520000'},
-    {'city': 'Nepalgunj', 'number': '081-520000'},
-  ];
+  final List<Map<String, String>> policeStations = [
+  {'city': 'Kathmandu', 'number': '100 or 01-4200600'},
+  {'city': 'Pokhara', 'number': '061-520000'},
+  {'city': 'Biratnagar', 'number': '021-523243'},
+  {'city': 'Butwal', 'number': '071-520000'},
+  {'city': 'Nepalgunj', 'number': '081-520000'},
+  {'city': 'Dhangadhi', 'number': '091-521111'},
+  {'city': 'Janakpur', 'number': '041-520123'},
+  {'city': 'Hetauda', 'number': '057-520789'},
+  {'city': 'Dharan', 'number': '025-520345'},
+  {'city': 'Bharatpur', 'number': '056-520456'},
+  {'city': 'Gaur', 'number': '055-520987'},
+  {'city': 'Ilam', 'number': '027-520654'},
+  {'city': 'Lahan', 'number': '033-521111'},
+  {'city': 'Tulsipur', 'number': '082-520321'},
+  {'city': 'Baglung', 'number': '068-521222'},
+];
 
-  final Map<String, String> importantNumbers = 
-  {
+  final Map<String, String> importantNumbers = {
     'Ambulance': '102',
     'Traffic Police': '104',
     'Fire Brigade': '101',
@@ -36,10 +44,12 @@ class Emergency extends StatelessWidget
           children: [
             const Text(
               'Important Emergency Numbers',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 22,
+                
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
-                color: Colors.lightBlueAccent,
+                color: Colors.deepPurple,
               ),
             ),
             const SizedBox(height: 12),
@@ -70,10 +80,11 @@ class Emergency extends StatelessWidget
             const SizedBox(height: 30),
             const Text(
               'Police Stations',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 26,
                 fontWeight: FontWeight.bold,
-                color: Colors.lightBlue
+                color: Colors.deepPurple
               ),
             ),
             const SizedBox(height: 12),
