@@ -31,7 +31,7 @@ class Emergency extends StatelessWidget {
   };
 
   void _makePhoneCall(String phoneNumber) async {
-    // If phone number contains extra info (like '100 or 01-4200600'), extract first number
+    
     String cleanNumber = phoneNumber.split(' ')[0];
     final Uri url = Uri(scheme: 'tel', path: cleanNumber);
     if (await canLaunchUrl(url)) {

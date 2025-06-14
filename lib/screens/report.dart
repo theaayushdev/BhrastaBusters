@@ -134,7 +134,7 @@ class _ReportPageState extends State<ReportPage> {
       appBar: CustomAppBar(),
       body: Stack(
         children: [
-          // Faded background image
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
@@ -336,7 +336,7 @@ class _ReportPageState extends State<ReportPage> {
                               ),
                             ],
                           ),
-                          // Add a bottom spacer so the logo is always visible!
+                 
                           const SizedBox(height: 60),
                         ],
                       ),

@@ -119,7 +119,7 @@ class _SecondPageState extends State<SecondPage> {
       appBar: CustomAppBar(),
       body: Stack(
         children: [
-          // Faded background image on bottom half
+          
           Align(
             alignment: Alignment.bottomCenter,
             child: Opacity(
@@ -140,7 +140,7 @@ class _SecondPageState extends State<SecondPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Attractive card for form fields
+              
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.95),
