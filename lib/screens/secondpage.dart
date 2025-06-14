@@ -36,7 +36,7 @@ class _SecondPageState extends State<SecondPage> {
   "Department of Agriculture", "Department of Education", "Department of Forest and Soil Conservation",
   "Department of Health Services", "Department of Hydrology and Meteorology", "Department of Immigration",
   "Department of Roads", "Department of Tourism", "Department of Transport Management",
-  "Department of Water Supply and Sewerage Management", "Nepal Electricity Authority", "Survey Department"
+  "Department of Water Supply", "Nepal Electricity Authority", "Survey Department"
 ];
 
 

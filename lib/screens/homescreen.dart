@@ -80,21 +80,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _onNavItemTapped(int index) {
-    if (index == 0) {
+  switch (index) {
+    case 0:
       setState(() {
         _selectedIndex = index;
       });
-    } else {
-      switch (index) {
-        case 1:
-          Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
-          break;
-        case 2:
-          Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
-          break;
-      }
-    }
+      break;
+    case 1:
+      Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+      break;
+    case 2:
+      Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
+      break;
+    case 3:
+      Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
