@@ -19,8 +19,26 @@ class _SecondPageState extends State<SecondPage> {
   String deviceId = "";
   final TextEditingController _dateController = TextEditingController();
 
-  final List<String> districts = ['Abhinab', 'Ayush'];
-  final List<String> departments = ['Electricity', 'Water'];
+  final List<String> districts = [
+  "Achham", "Arghakhanchi", "Baglung", "Baitadi", "Bajhang", "Bajura", "Banke", "Bara", "Bardiya",
+  "Bhaktapur", "Bhojpur", "Chitwan", "Dailekh", "Dang", "Dadeldhura", "Darchula", "Dhading", "Dhankuta",
+  "Dhanusha", "Dolakha", "Dolpa", "Doti", "Eastern Rukum", "Gorkha", "Gulmi", "Humla", "Ilam",
+  "Jajarkot", "Jhapa", "Jumla", "Kailali", "Kalikot", "Kanchanpur", "Kapilvastu", "Kaski", "Kathmandu",
+  "Kavrepalanchok", "Khotang", "Lalitpur", "Lamjung", "Mahottari", "Makwanpur", "Manang", "Morang",
+  "Mugu", "Mustang", "Myagdi", "Nawalpur", "Nuwakot", "Okhaldhunga", "Palpa", "Panchthar", "Parasi",
+  "Parbat", "Parsa", "Pyuthan", "Ramechhap", "Rasuwa", "Rautahat", "Rolpa", "Rupandehi", "Salyan",
+  "Sankhuwasabha", "Saptari", "Sarlahi", "Sindhuli", "Sindhupalchok", "Siraha", "Solukhumbu",
+  "Sunsari", "Surkhet", "Syangja", "Tanahun", "Taplejung", "Tarai", "Terhathum", "Udayapur",
+  "Western Rukum"
+];
+
+  final List<String> departments = [
+  "Department of Agriculture", "Department of Education", "Department of Forest and Soil Conservation",
+  "Department of Health Services", "Department of Hydrology and Meteorology", "Department of Immigration",
+  "Department of Roads", "Department of Tourism", "Department of Transport Management",
+  "Department of Water Supply and Sewerage Management", "Nepal Electricity Authority", "Survey Department"
+];
+
 
   @override
   void initState() {
@@ -110,6 +128,18 @@ class _SecondPageState extends State<SecondPage> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
+                  DropdownButtonFormField<String>(
+                    value: selectedDistrict,
+                    hint: const Text("Select District"),
+                    items: districts
+                        .map((d) => DropdownMenuItem(
+                              value: d,
+                              child: Text(d),
+                            ))
+                        .toList(),
+                    onChanged: (value) =>
+                        setState(() => selectedDistrict = value),
+                  ),
                   const SizedBox(height: 20),
                   DropdownButtonFormField<String>(
                     value: selectedDepartment,
@@ -124,18 +154,7 @@ class _SecondPageState extends State<SecondPage> {
                         setState(() => selectedDepartment = value),
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: selectedDistrict,
-                    hint: const Text("Select District"),
-                    items: districts
-                        .map((d) => DropdownMenuItem(
-                              value: d,
-                              child: Text(d),
-                            ))
-                        .toList(),
-                    onChanged: (value) =>
-                        setState(() => selectedDistrict = value),
-                  ),
+                  
                   const SizedBox(height: 16),
                   TextField(
                     controller: _dateController,
