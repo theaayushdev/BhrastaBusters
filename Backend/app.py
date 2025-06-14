@@ -48,7 +48,7 @@ def index():
 
 @app.route("/GenerateToken", methods=["GET"])
 def generate_token():
-    token = str(uuid.uuid4())
+    token = str(uuid.uuid4())[:9]
     return jsonify({"token": token})
 
 
@@ -58,15 +58,17 @@ def submit_report():
     try:
         # Get uploaded image from form 
         file = request.files.get("media")
-        media_filename = ""
+        filenames = []
+
         if file and file.filename:
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
-            media_filename = filename
+            filenames.append(filename)
+
+        media_filename = ",".join(filenames)
 
         device_id = request.form.get("device_id") 
-
         if not device_id:
             return jsonify({"error": "Missing device_id"}), 400
     
