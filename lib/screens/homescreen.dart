@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SecondWidget(token: token),
+            builder: (context) => SecondPage(token: token),
           ),
         );
       } else {
@@ -95,17 +95,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       // For other tabs, navigate to respective pages and do not change index
       switch (index) {
+      
         case 1:
-          Navigator.push(
-              
-              context, MaterialPageRoute(builder: (_) =>  ReportPage()));
-          break;
-        case 2:
           Navigator.push(
               
               context, MaterialPageRoute(builder: (_) =>  Emergency()));
           break;
-        case 3:
+        case 2:
           Navigator.push(
               
               context, MaterialPageRoute(builder: (_) =>  FAQPage()));
@@ -158,17 +154,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     MaterialPageRoute(builder: (_) =>  FAQPage()));
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.info, color: Color(0xFF003893)),
-              title: const Text('Report'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  ReportPage()),
-                );
-              },
-            ),
+      
           ],
         ),
       ),

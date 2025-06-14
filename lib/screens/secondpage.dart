@@ -49,6 +49,10 @@ class _SecondWidgetState extends State<SecondWidget> {
   final ImagePicker _picker = ImagePicker();
 
 
+  final List<String> districts = ['Abhinab','Ayush']; // Keep your districts list
+  final List<String> departments = ['Electricity','Water']; // Keep your departments list
+
+
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
