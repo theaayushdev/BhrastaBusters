@@ -70,7 +70,7 @@ class Emergency extends StatelessWidget
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text('Emergency Number: ${entry.value}'),
-                  trailing: const Icon(Icons.call, color: Colors.lightBlueAccent),
+                  trailing: const Icon(Icons.call, color: Color.fromARGB(255, 7, 148, 11)),
                   onTap: () {
                     
                   },
@@ -95,13 +95,13 @@ class Emergency extends StatelessWidget
                 ),
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
-                  leading: Icon(Icons.local_police, color: Colors.lightBlue[700]),
+                  leading: Icon(Icons.local_police, color: Color.fromARGB(255, 7, 148, 11)),
                   title: Text(
                     station['city']!,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text('Police Number: ${station['number']}'),
-                  trailing: const Icon(Icons.call_outlined, color: Colors.lightBlue),
+                  trailing: const Icon(Icons.call_outlined, color: Color.fromARGB(255, 7, 148, 11)),
                   onTap: () {
                    
                   },
