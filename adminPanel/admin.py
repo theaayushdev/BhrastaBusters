@@ -14,9 +14,22 @@ DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Backend
 #  all reports
 @app.route('/')
 def view_reports():
+    selected_department = request.args.get("department")
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("""
+
+    # Get all department names for dropdown
+    cursor.execute("SELECT DISTINCT department FROM reports WHERE department IS NOT NULL")
+    all_departments = [row[0] for row in cursor.fetchall()]
+    if selected_department and selected_department != "All":
+        cursor.execute("""
+            SELECT id, department, district, location, description, media, token, status, 
+                   credibility_score, device_id, timestamp 
+            FROM reports WHERE department = ?
+        """, (selected_department,))
+    else:
+        cursor.execute("""
         SELECT id, department, district, location, description, media, token, status, 
                credibility_score, device_id, timestamp 
         FROM reports
@@ -75,7 +88,12 @@ def view_reports():
     plt.close()
 
     conn.close()
-    return render_template('index.html', reports=reports)
+    return render_template(
+        'index.html',
+        reports=reports,
+        departments=all_departments,
+        selected_department=selected_department
+    )
 
 # Endpoint to update status
 @app.route('/update/<int:report_id>', methods=['POST'])
