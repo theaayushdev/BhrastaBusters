@@ -9,6 +9,7 @@ import 'package:bhrastabusters/screens/secondpage.dart';
 import '../screens/information.dart';
 import '../screens/faq.dart';
 import '../screens/report.dart';
+import 'status.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,6 +50,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
     });
   }
+  void _navigateToStatusPage() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const StatusPage()),
+  );
+}
 
   @override
   void dispose() {
@@ -270,7 +277,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                       const SizedBox(height: 16),
                       TextButton(
-                        onPressed: _fetchTokenAndNavigate,
+                        onPressed: _navigateToStatusPage,
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: const Color(0xFF003893),
