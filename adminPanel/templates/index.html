@@ -123,6 +123,16 @@
     </h1>
         <p class="subheading">Real-time corruption report management</p>
 
+        <form method="get" action="/">
+            <label for="department">Filter by Department:</label>
+            <select name="department" id="department" onchange="this.form.submit()">
+                <option value="All" {% if selected_department == 'All' %}selected{% endif %}>All</option>
+                {% for dept in departments %}
+                    <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>{{ dept }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
         <table>
             <tr>
                 <th>ID</th>
