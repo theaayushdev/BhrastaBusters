@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:bhrastabusters/widget/topbar.dart';
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'assets/pic8.png',
   ];
 
-  int _selectedIndex = 0; // For bottom nav bar
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -86,26 +85,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-  // Handle bottom nav tap
   void _onNavItemTapped(int index) {
     if (index == 0) {
-      // Home selected, just update index to show home content
       setState(() {
         _selectedIndex = index;
       });
     } else {
-      // For other tabs, navigate to respective pages and do not change index
       switch (index) {
-      
         case 1:
-          Navigator.push(
-              
-              context, MaterialPageRoute(builder: (_) =>  Emergency()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => Emergency()));
           break;
         case 2:
-          Navigator.push(
-              
-              context, MaterialPageRoute(builder: (_) =>  FAQPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => FAQPage()));
           break;
       }
     }
@@ -141,100 +134,139 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               title: const Text('Emergency Info'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) =>  Emergency()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => Emergency()));
               },
             ),
             ListTile(
-              leading: const Icon(Icons.question_answer,
-                  color: Color(0xFF003893)),
+              leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) =>  FAQPage()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => FAQPage()));
               },
             ),
-      
           ],
         ),
       ),
       body: _selectedIndex == 0
-          ? Column(
+          ? Stack(
               children: [
-                SizedBox(
-                  height: 150,
-                  width: double.infinity,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _imagePaths.length,
-                    itemBuilder: (context, index) {
-                      return Image.asset(
-                        _imagePaths[index],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      );
-                    },
+                // Background flag image (faded)
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.08,
+                    child: Image.asset(
+                      'assets/twoflag.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: DefaultTextStyle(
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003893),
-                          ),
-                          child: AnimatedTextKit(
-                            isRepeatingAnimation: false,
-                            totalRepeatCount: 1,
-                            animatedTexts: [
-                              TyperAnimatedText(
-                                'To the people, For the people, By the people',
-                                speed: Duration(milliseconds: 50),
-                              ),
-                            ],
-                          ),
-                        ),
+
+                // Main content
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Sliding images directly below app bar
+                    SizedBox(
+                      height: 160,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: _imagePaths.length,
+                        itemBuilder: (context, index) {
+                          return Image.asset(
+                            _imagePaths[index],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          );
+                        },
                       ),
-                      AnimatedBuilder(
-                        animation: _blinkController,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _blinkController.value,
-                            child: const Text(
-                              '|',
-                              style: TextStyle(
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Animated text
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: DefaultTextStyle(
+                              style: const TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF003893),
                               ),
+                              child: AnimatedTextKit(
+                                isRepeatingAnimation: false,
+                                totalRepeatCount: 1,
+                                animatedTexts: [
+                                  TyperAnimatedText(
+                                    'To the people, For the people, By the people',
+                                    speed: Duration(milliseconds: 50),
+                                  ),
+                                ],
+                              ),
                             ),
-                          );
-                        },
+                          ),
+                          AnimatedBuilder(
+                            animation: _blinkController,
+                            builder: (context, child) {
+                              return Opacity(
+                                opacity: _blinkController.value,
+                                child: const Text(
+                                  '|',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF003893),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextButton(
-                  onPressed: _fetchTokenAndNavigate,
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF003893),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                  ),
-                  child: const Text('Emergency', style: TextStyle(fontSize: 16)),
+                    ),
+
+                    const Spacer(),
+
+                    Center(
+                      child: Column(
+                        children: [
+                          TextButton(
+                            onPressed: _fetchTokenAndNavigate,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF003893),
+                                 padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                            ),
+                            child: const Text('Report',
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                          const SizedBox(height: 16),
+                          TextButton(
+                            onPressed: _fetchTokenAndNavigate,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF003893),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                            ),
+                            child: const Text('Status',
+                                style: TextStyle(fontSize: 16)),
+                          ),
+                          const SizedBox(height: 40), // Padding above bottom nav
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             )
-          : Container(), // For other tabs body is empty because navigation pushes new pages
+          : Container(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF003893),
@@ -242,23 +274,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         onTap: _onNavItemTapped,
         type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Report',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.emergency),
-            label: 'Emergency',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.question_answer),
-            label: 'FAQ',
-          ),
-         
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Report'),
+          BottomNavigationBarItem(icon: Icon(Icons.emergency), label: 'Emergency'),
+          BottomNavigationBarItem(icon: Icon(Icons.question_answer), label: 'FAQ'),
         ],
       ),
     );
