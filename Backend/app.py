@@ -28,12 +28,10 @@ def generate_token():
     token = str(uuid.uuid4())
     return jsonify({"token": token})
 
-#report submisstion 
-@app.route("/report", methods=["POST"])
-@limiter.limit("5 per day")  # Limit to 5 requests per day
 
-@app.route("/score", methods=["POST"])
-def get_score():
+@app.route("/report", methods=["POST"])
+@limiter.limit("3 per day") 
+def submit_report():
     try:
         data = request.get_json()
 
@@ -80,3 +78,56 @@ def get_status(token):
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
 
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsfajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
+v
+ajfsf
+fasdfakdslfjad
+fafa
+sdaffasd
+adsf
