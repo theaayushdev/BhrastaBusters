@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BhrastaBusters Admin Dashboard</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #eee;
+        }
+        h1 {
+            text-align: center;
+        }
+        select, button {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BhrastaBusters Reports</h1>
+    <table>
+  <tr>
+    <th>ID</th>
+    <th>Department</th>
+    <th>District</th>
+    <th>Description</th>
+    <th>Media</th>
+    <th>Token</th>
+    <th>Status</th>
+    <th>Credibility</th>
+    <th>Device ID</th>
+    <th>Timestamp</th>
+  </tr>
+  {% for r in reports %}
+  <tr>
+    <td>{{ r[0] }}</td>
+    <td>{{ r[1] }}</td>
+    <td>{{ r[2] }}</td>
+    <td>{{ r[3] }}</td>
+    <td>{{ r[4] }}</td>
+    <td>{{ r[5] }}</td>
+    <td>
+      <form method="POST" action="/update/{{ r[0] }}">
+        <select name="status" onchange="this.form.submit()">
+          <option value="Pending" {% if r[6] == "Pending" %}selected{% endif %}>Pending</option>
+          <option value="In Progress" {% if r[6] == "In Progress" %}selected{% endif %}>In Progress</option>
+          <option value="Resolved" {% if r[6] == "Resolved" %}selected{% endif %}>Resolved</option>
+        </select>
+      </form>
+    </td>
+    <td>{{ r[7] }}</td>
+    <td>{{ r[8] }}</td>
+    <td>{{ r[9] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</body>
+</html>
