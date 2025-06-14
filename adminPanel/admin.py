@@ -176,7 +176,7 @@ def generate_pdf(report_id):
 
     rendered_html = render_template_string(html_template, r=report, image_base64=image_base64)
 
-    # ➕ Create PDF in memory
+    # Create PDF in memory
     pdf_buffer = io.BytesIO()
     result = pisa.CreatePDF(rendered_html, dest=pdf_buffer)
 
