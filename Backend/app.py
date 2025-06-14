@@ -73,6 +73,7 @@ def submit_report():
             return jsonify({"error": "Missing device_id"}), 400
     
         departmnt = request.form.get("department", "")
+        district = request.form.get("district", "")
         location = request.form.get("location", "")
         description = request.form.get("description", "")
         date = request.form.get("date", "")
@@ -83,9 +84,9 @@ def submit_report():
         credibility = score_text(description)
 
         cursor.execute("""
-                INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (departmnt, location, date, description, media_filename, token, status, credibility, device_id, timestamp))
+                INSERT INTO reports (department, district, location, date, description, media, token, status, credibility_score, device_id, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+            """, (departmnt, district, location, date, description, media_filename, token, status, credibility, device_id, timestamp))
         conn.commit()
 
         print(f"Report submitted by device {device_id} with token {token}")

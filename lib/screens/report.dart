@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'homescreen.dart';
 
 class ReportPage extends StatefulWidget {
@@ -29,13 +29,20 @@ class _ReportPageState extends State<ReportPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  File? _selectedImage;
+  
+  List<File> _selectedMedia = [];
 
-  Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
+  // ✅ Replaces old _pickImage
+  Future<void> _pickMedia() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'mp4', 'webm'],
+    );
+
+    if (result != null) {
       setState(() {
-        _selectedImage = File(picked.path);
+        _selectedMedia = result.paths.map((p) => File(p!)).toList();
       });
     }
   }
@@ -46,20 +53,16 @@ class _ReportPageState extends State<ReportPage> {
       var request = http.MultipartRequest('POST', uri);
 
       request.fields['department'] = widget.department;
-
-      // ⚠️ **This was the main issue:**
-      // You took location input from user (_locationController)
-      // but sent `widget.district` instead.
-      // So I fixed it to send `_locationController.text`
+      request.fields['district'] = widget.district;
       request.fields['location'] = _locationController.text;
-
       request.fields['date'] = widget.date;
       request.fields['description'] = _descriptionController.text;
       request.fields['device_id'] = widget.deviceId;
 
-      if (_selectedImage != null) {
+      // ✅ Add all selected media files
+      for (var file in _selectedMedia) {
         request.files.add(
-          await http.MultipartFile.fromPath('media', _selectedImage!.path),
+          await http.MultipartFile.fromPath('media', file.path),
         );
       }
 
@@ -76,7 +79,7 @@ class _ReportPageState extends State<ReportPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close dialog
+                  Navigator.pop(context);
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => HomePage()),
@@ -88,12 +91,6 @@ class _ReportPageState extends State<ReportPage> {
             ],
           ),
         );
-
-        // Optional: clear fields and image after success if you want
-        // _descriptionController.clear();
-        // _locationController.clear();
-        // setState(() => _selectedImage = null);
-
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
@@ -141,20 +138,37 @@ class _ReportPageState extends State<ReportPage> {
                     val == null || val.isEmpty ? "Please enter the location" : null,
               ),
               const SizedBox(height: 16),
-              _selectedImage != null
-                  ? Image.file(_selectedImage!)
-                  : const Text("No image selected."),
+
+              // ✅ Preview media files
+              if (_selectedMedia.isNotEmpty)
+                Wrap(
+                  spacing: 8,
+                  children: _selectedMedia.map((file) {
+                    final isImage = file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png');
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: isImage
+                          ? Image.file(file, fit: BoxFit.cover)
+                          : const Icon(Icons.videocam, size: 50),
+                    );
+                  }).toList(),
+                )
+              else
+                const Text("No media selected."),
+
               const SizedBox(height: 8),
               ElevatedButton.icon(
-                onPressed: _pickImage,
-                icon: const Icon(Icons.upload),
-                label: const Text("Upload Image"),
+                onPressed: _pickMedia,
+                icon: const Icon(Icons.upload_file),
+                label: const Text("Upload Images/Videos"),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitReport,
                 child: const Text("Submit Report"),
-              )
+              ),
             ],
           ),
         ),

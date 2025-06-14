@@ -17,17 +17,17 @@ def view_reports():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, department, location, description, media, token, status, 
+        SELECT id, department, district, location, description, media, token, status, 
                credibility_score, device_id, timestamp 
         FROM reports
     """)
     reports = cursor.fetchall()
 
-    #Generate Location Graph
+    #Generate district Graph
     cursor.execute("""
-        SELECT location, COUNT(*) as count
+        SELECT district, COUNT(*) as count
         FROM reports
-        GROUP BY location
+        GROUP BY district
         ORDER BY count DESC
     """)
     location_data = cursor.fetchall()
