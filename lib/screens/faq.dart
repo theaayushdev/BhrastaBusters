@@ -45,7 +45,7 @@ class FAQPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Centered & Styled Heading
+         
             Center(
               child: Column(
                 children: const [

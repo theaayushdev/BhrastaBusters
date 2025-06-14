@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: _selectedIndex == 0
           ? Stack(
               children: [
-                // Faded background image on bottom half
+             
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Opacity(
@@ -173,14 +173,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
 
-                // Main scrollable content
+            
                 SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 12),
 
-                      // Sliding Image
+                      
 Padding(
   padding: const EdgeInsets.symmetric(horizontal: 16.0),
   child: ClipRRect(
@@ -194,7 +194,7 @@ Padding(
         itemBuilder: (context, index) {
           return Image.asset(
             _imagePaths[index],
-            fit: BoxFit.cover, // You can use BoxFit.fill if you want no blank space at all
+            fit: BoxFit.cover, 
             width: double.infinity,
           );
         },
@@ -206,7 +206,7 @@ Padding(
 
                       const SizedBox(height: 30),
 
-                      // Responsive animated text with blinking cursor
+                      
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Center(
@@ -262,12 +262,12 @@ Padding(
                         ),
                       ),
 
-                      const SizedBox(height: 200), // Leave space for buttons
+                      const SizedBox(height: 200), 
                     ],
                   ),
                 ),
 
-                // Buttons at bottom half
+                
                 Positioned(
                   bottom: MediaQuery.of(context).size.height * 0.085,
                   left: 0,
