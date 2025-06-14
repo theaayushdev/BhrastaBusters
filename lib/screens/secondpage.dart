@@ -112,6 +112,20 @@ class _SecondWidgetState extends State<SecondWidget> {
   }
 
 
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,6 +199,63 @@ class _SecondWidgetState extends State<SecondWidget> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade400),
                   ),
+<<<<<<< HEAD
+                  child: _selectedImage != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.file(
+                            _selectedImage!,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.image_outlined, size: 50, color: Colors.grey[600]),
+                            const SizedBox(height: 10),
+                            Text(
+                              'Tap to select an image',
+                              style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                            ),
+                          ],
+=======
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _dateController.text.isEmpty
+                            ? 'Tap to select a date'
+                            : _dateController.text,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: _dateController.text.isEmpty ? Colors.grey : Colors.black,
+>>>>>>> 5c741720885d289a09562ed4d9f833551a976541
+                        ),
+                      ),
+                      const Icon(Icons.calendar_today, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+<<<<<<< HEAD
+              const Text(
+                'Select Date:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade400),
+                  ),
                   alignment: Alignment.centerLeft,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,6 +276,8 @@ class _SecondWidgetState extends State<SecondWidget> {
               ),
               const SizedBox(height: 20),
               Text('Token: ${widget.token}'),
+=======
+              Text('Token: ${widget.token}'),
                      const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
@@ -217,6 +290,7 @@ class _SecondWidgetState extends State<SecondWidget> {
                 ),
                 child: const Text('Next', style: TextStyle(fontSize: 16)),
               ),
+>>>>>>> 5c741720885d289a09562ed4d9f833551a976541
             ],
           ),
         ),

@@ -28,43 +28,40 @@ def generate_token():
     token = str(uuid.uuid4())
     return jsonify({"token": token})
 
-#report submisstion 
-@app.route("/score", methods=["POST"])
+
+@app.route("/report", methods=["POST"])
 @limiter.limit("3 per day") 
 def submit_report():
     try:
         data = request.get_json()
 
-        device_id = data.get("device_id")
+        device_id = data.get("device_id") 
+
         if not device_id:
             return jsonify({"error": "Missing device_id"}), 400
-        
-        departmnt = data.get("department")
-        location = data.get("location")
-        date  = data.get("date")
-        description = data.get("description")
+    
+        departmnt = data.get("department", "")
+        location = data.get("location", "")
+        description = data.get("description", "")
         media = data.get("media", "")
-        token = data.get("token")
-
-        if not all([departmnt, location, date, description, media]):
-            return jsonify({"error": "Missing required fields"}), 400
-
+        token = str(uuid.uuid4())
         status = "pending"
         timestamp = datetime.now().isoformat()
+
         credibility = score_text(description)
 
         cursor.execute("""
-            INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (departmnt, location, date, description, media, token, status, credibility, device_id, timestamp))
+                INSERT INTO reports (department, location, date, description, media, token, status, credibility_score, device_id, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (departmnt, location, date, description, media, token, status, credibility, device_id, timestamp))
         conn.commit()
 
         print(f"Report submitted by device {device_id} with token {token}")
         return jsonify({
-            "message": "Report submitted successfully",
-            "token": token,
-            "credibility_score": credibility
-        }), 200
+                "message": "Report submitted successfully",
+                "token": token,
+                "credibility_score": credibility
+            }), 200
     
     except Exception as e:
         print("Error in /report:", e)
