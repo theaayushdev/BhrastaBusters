@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import os
+import matplotlib
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 
 # Flask app with HTML template directory
