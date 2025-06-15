@@ -127,7 +127,7 @@ def generate_pdf(report_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, department, district, location, date, description, media, token, status, credibility_score, timestamp 
+        SELECT id, department, district, location, date, description, media, token, status, credibility_score, device_id, timestamp 
         FROM reports
         WHERE id = ?
     """, (report_id,))
@@ -139,14 +139,14 @@ def generate_pdf(report_id):
 
     # Load first image and convert to base64
     image_base64 = ""
-    if report[5]:
-        first_image = report[5].split(",")[0]
+    if report[6]:  # media
+        first_image = report[6].split(",")[0]
         image_path = os.path.abspath(os.path.join("Backend", "media", first_image))
         if os.path.exists(image_path):
             with open(image_path, "rb") as img_file:
                 image_base64 = base64.b64encode(img_file.read()).decode("utf-8")
 
-    # Inline HTML with base64 image
+    # HTML template
     html_template = """
     <html>
     <head>
@@ -163,11 +163,10 @@ def generate_pdf(report_id):
         <p><strong>Department:</strong> {{ r[1] }}</p>
         <p><strong>District:</strong> {{ r[2] }}</p>
         <p><strong>Location:</strong> {{ r[3] }}</p>
-        <li><strong>Date:</strong> {report[4]}</li> 
-        <p><strong>Description:</strong> {{ r[4] }}</p>
-        <p><strong>Status:</strong> {{ r[7] }}</p>
-        <p><strong>Credibility Score:</strong> {{ r[8] }}</p>
-        <p><strong>Timestamp:</strong> {{ r[10] }}</p>
+        <p><strong>Date:</strong> {{ r[4] }}</p>
+        <p><strong>Description:</strong> {{ r[5] }}</p>
+        <p><strong>Status:</strong> {{ r[8] }}</p>
+        <p><strong>Timestamp:</strong> {{ r[11] }}</p>
         {% if image_base64 %}
         <p><strong>Attached Media:</strong></p>
         <img src="data:image/jpeg;base64,{{ image_base64 }}">
@@ -178,7 +177,6 @@ def generate_pdf(report_id):
 
     rendered_html = render_template_string(html_template, r=report, image_base64=image_base64)
 
-    # Create PDF in memory
     pdf_buffer = io.BytesIO()
     result = pisa.CreatePDF(rendered_html, dest=pdf_buffer)
 
@@ -209,30 +207,38 @@ def send_report_email(report_id):
         return "Report not found", 404
 
     image_base64 = ""
-    if report[5]:
-        first_image = report[5].split(",")[0]
+    if report[6]:  # media
+        first_image = report[6].split(",")[0]
         image_path = os.path.abspath(os.path.join("Backend", "media", first_image))
         if os.path.exists(image_path):
             with open(image_path, "rb") as img_file:
                 image_base64 = base64.b64encode(img_file.read()).decode("utf-8")
 
+    # Email PDF HTML template
     html_template = """
-    <html><head><style>
-    body { font-family: DejaVu Sans, sans-serif; }
-    h1 { color: #1d4ed8; }
-    p { line-height: 1.5; }
-    img { max-width: 500px; margin-top: 20px; }
-    </style></head><body>
+    <html>
+    <head>
+        <style>
+            body { font-family: DejaVu Sans, sans-serif; }
+            h1 { color: #1d4ed8; }
+            p { line-height: 1.5; }
+            img { max-width: 500px; margin-top: 20px; }
+        </style>
+    </head>
+    <body>
         <h1>BhrastaBusters Report</h1>
         <p><strong>Report ID:</strong> {{ r[0] }}</p>
         <p><strong>Department:</strong> {{ r[1] }}</p>
         <p><strong>District:</strong> {{ r[2] }}</p>
         <p><strong>Location:</strong> {{ r[3] }}</p>
-        <li><strong>Date:</strong> {report[4]}</li> 
-        <p><strong>Description:</strong> {{ r[4] }}</p>
-        {% if image_base64 %}<p><strong>Attached Media:</strong></p>
-        <img src="data:image/jpeg;base64,{{ image_base64 }}">{% endif %}
-    </body></html>
+        <p><strong>Date:</strong> {{ r[4] }}</p>
+        <p><strong>Description:</strong> {{ r[5] }}</p>
+        {% if image_base64 %}
+        <p><strong>Attached Media:</strong></p>
+        <img src="data:image/jpeg;base64,{{ image_base64 }}">
+        {% endif %}
+    </body>
+    </html>
     """
 
     rendered_html = render_template_string(html_template, r=report, image_base64=image_base64)
