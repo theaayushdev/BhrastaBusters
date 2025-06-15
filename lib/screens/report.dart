@@ -49,72 +49,78 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Future<void> _submitReport() async {
-    if (_formKey.currentState!.validate()) {
-      final uri = Uri.parse("http://172.16.3.155:5000/report");
-      var request = http.MultipartRequest('POST', uri);
+  if (_formKey.currentState!.validate()) {
+    if (_selectedMedia.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please upload at least one image or video.")),
+      );
+      return;
+    }
 
-      request.fields['department'] = widget.department;
-      request.fields['district'] = widget.district;
-      request.fields['location'] = _locationController.text;
-      request.fields['date'] = widget.date;
-      request.fields['description'] = _descriptionController.text;
-      request.fields['device_id'] = widget.deviceId;
+    final uri = Uri.parse("http://172.16.3.155:5000/report");
+    var request = http.MultipartRequest('POST', uri);
 
-      for (var file in _selectedMedia) {
-        request.files.add(
-          await http.MultipartFile.fromPath('media', file.path),
-        );
-      }
+    request.fields['department'] = widget.department;
+    request.fields['district'] = widget.district;
+    request.fields['location'] = _locationController.text;
+    request.fields['date'] = widget.date;
+    request.fields['description'] = _descriptionController.text;
+    request.fields['device_id'] = widget.deviceId;
 
-      var response = await request.send();
-      final responseBody = await response.stream.bytesToString();
+    for (var file in _selectedMedia) {
+      request.files.add(
+        await http.MultipartFile.fromPath('media', file.path),
+      );
+    }
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(responseBody);
-        final generatedToken = data['token'];
+    var response = await request.send();
+    final responseBody = await response.stream.bytesToString();
 
-        Clipboard.setData(ClipboardData(text: generatedToken));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(responseBody);
+      final generatedToken = data['token'];
 
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("Success"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text("Report submitted.\nNote: This is important for further status checking\nToken:"),
-                const SizedBox(height: 8),
-                SelectableText(
-                  generatedToken,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text("Token copied to clipboard."),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => HomePage()),
-                    (route) => false,
-                  );
-                },
-                child: const Text("OK"),
+      Clipboard.setData(ClipboardData(text: generatedToken));
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Success"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Report submitted.\nNote: This is important for further status checking\nToken:"),
+              const SizedBox(height: 8),
+              SelectableText(
+                generatedToken,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 8),
+              const Text("Token copied to clipboard."),
             ],
           ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
-        );
-      }
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomePage()),
+                  (route) => false,
+                );
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to submit: ${response.statusCode}")),
+      );
     }
   }
-
+}
   void _cancel() {
     Navigator.of(context).pop();
   }
