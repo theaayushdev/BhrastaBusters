@@ -29,7 +29,9 @@ flutter pub get
 flutter run
 ```
 ### Set Up the Python Backend (Admin Panel)
+```bash
 cd Backend
+```
 # For Linux/macOS
 ```bash
 python3 -m venv venv
