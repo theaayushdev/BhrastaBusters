@@ -1,17 +1,17 @@
 ### BhrastaBusters
-BhrastaBuster* is an anonymous corruption reporting tool that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
+BhrastaBuster is an anonymous corruption reporting tool that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
 
 
 
-## 🚀 Features
+## Features
 
-### 🧑‍💻 User (Flutter App)
+### User (Flutter App)
 - Generate a unique report token.
 - Submit corruption reports anonymously.
 - Attach image or video evidence.
 - Check report status using the token.
 - 
-### 🖥️ Admin (Flask Web App)
+### Admin (Flask Web App)
 - View all reports in a clean table.
 - Filter reports by department.
 - View and download attached media.
@@ -20,7 +20,7 @@ BhrastaBuster* is an anonymous corruption reporting tool that allows users to se
 - Email individual report PDFs.
 - View department/district-wise report graphs.
 
-### 🧠 Machine Learning
+### Machine Learning
 - Logistic Regression model trained on a labeled dataset.
 - TF-IDF vectorization using unigrams + bigrams.
 - Reports are scored for *credibility* (0–1).
@@ -32,7 +32,7 @@ Follow these simple steps to run the Flutter app and Python backend locally.
 
 ---
 
-###1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/theaayushdev/BhrastaBusters.git
