@@ -3,6 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 import joblib
 import re
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
@@ -36,10 +37,11 @@ model.fit(X_train, y_train)
 preds = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, preds))
 
+os.makedirs("ml", exist_ok=True)
 
 #save vectorizer + model
-joblib.dump(vec, "ml/vectorizer.pkl")
-joblib.dump(model,"ml/model.pkl")
+joblib.dump(vec, "Backend/ml/vectorizer.pkl")
+joblib.dump(model,"Backend/ml/model.pkl")
 
 
 
