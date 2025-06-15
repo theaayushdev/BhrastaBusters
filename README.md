@@ -1,4 +1,4 @@
-### BhrastaBusters
+## BhrastaBusters
 BhrastaBuster is an anonymous corruption reporting tool that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
 
 
@@ -10,7 +10,7 @@ BhrastaBuster is an anonymous corruption reporting tool that allows users to sec
 - Submit corruption reports anonymously.
 - Attach image or video evidence.
 - Check report status using the token.
-- 
+
 ### Admin (Flask Web App)
 - View all reports in a clean table.
 - Filter reports by department.
