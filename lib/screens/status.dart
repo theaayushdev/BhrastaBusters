@@ -33,7 +33,7 @@ class _StatusPageState extends State<StatusPage> {
 
     try {
       final response = await http.get(
-        Uri.parse("http://172.16.3.155:5000/status/$token"),
+        Uri.parse("http://172.16.3.254:5000/status/$token"),
       );
 
       if (response.statusCode == 200) {
@@ -181,7 +181,7 @@ class _StatusPageState extends State<StatusPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  "http://172.16.3.155:5000/external-static/graph/location_graph.png",
+                  "http://172.16.3.254:5000/external-static/graph/location_graph.png",
                   height: 240,
                   width: double.infinity,
                   fit: BoxFit.contain,
@@ -219,7 +219,7 @@ class _StatusPageState extends State<StatusPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  "http://172.16.3.155:5000/external-static/graph/department_graph.png",
+                  "http://172.16.3.254:5000/external-static/graph/department_graph.png",
                   height: 240,
                   width: double.infinity,
                   fit: BoxFit.contain,

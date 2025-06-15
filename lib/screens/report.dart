@@ -57,7 +57,7 @@ class _ReportPageState extends State<ReportPage> {
       return;
     }
 
-    final uri = Uri.parse("http://172.16.3.155:5000/report");
+    final uri = Uri.parse("http://172.16.3.254:5000/report");
     var request = http.MultipartRequest('POST', uri);
 
     request.fields['department'] = widget.department;
