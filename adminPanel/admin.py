@@ -41,6 +41,7 @@ def view_reports():
         FROM reports
     """)
     reports = cursor.fetchall()
+    reports.sort(key=lambda x: x[8] if x[8] is not None else 0, reverse=True)
 
     #Generate district Graph
     cursor.execute("""

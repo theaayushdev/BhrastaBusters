@@ -135,7 +135,7 @@
 
         <table>
             <tr>
-                <th>ID</th>
+                <th>S.N.</th>
                 <th>Department</th>
                 <th>District</th>
                 <th>Location</th>
@@ -150,7 +150,7 @@
             </tr>
             {% for r in reports %}
             <tr>
-                <td>{{ r[0] }}</td>
+                <td>{{ loop.index }}</td>
                 <td>{{ r[1] }}</td>
                 <td>{{ r[2] }}</td>
                 <td>{{ r[3] }}</td>
@@ -181,7 +181,7 @@
                     <form method="POST" action="/update/{{ r[0] }}">
                         <select name="status" onchange="this.form.submit()">
                             <option value="Pending" {% if r[7] == "Pending" %}selected{% endif %}>Pending</option>
-                            <option value="In Progress" {% if r[7] == "In Progress" %}selected{% endif %}>In Progress</option>
+                            <option value="Under Investigation" {% if r[7] == "Under Investigation" %}selected{% endif %}>Under Investigation</option>
                             <option value="Resolved" {% if r[7] == "Resolved" %}selected{% endif %}>Resolved</option>
                         </select>
                     </form>

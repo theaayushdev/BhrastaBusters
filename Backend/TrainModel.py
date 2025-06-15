@@ -20,8 +20,8 @@ def clean_text(text):
 
 df["clean_text"] = df["text"].apply(clean_text)
 
-# Convert to TF-IDF vectors using unigrams + bigrams
-vec = TfidfVectorizer(ngram_range=(1, 2), max_features=8000)
+# Convert to TF-IDF vectors 
+vec = TfidfVectorizer(ngram_range=(1, 3), max_features=15000)
 X = vec.fit_transform(df["clean_text"])
 y = df["label"]
 
