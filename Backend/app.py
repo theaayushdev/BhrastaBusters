@@ -61,7 +61,7 @@ def submit_report():
         filenames = []
 
         for file in files:
-            if file and file.filename:  # ✅ Check each individual file
+            if file and file.filename: 
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
