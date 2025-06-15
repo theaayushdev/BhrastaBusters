@@ -32,20 +32,30 @@ class _SecondPageState extends State<SecondPage> {
     "Western Rukum"
   ];
 
-  final List<String> departments = [
-    "Agriculture",
-    "Education",
-    "Forest and Soil Conservation",
-    "Health Services",
-    "Hydrology and Meteorology",
-    "Immigration",
-    "Roads",
-    "Tourism",
-    "Transport Management",
-    "Water Supply",
-    "Nepal Electricity Authority",
-    "Survey Department"
-  ];
+final List<String> departments = [
+  "Agriculture",
+  "Education",
+  "Forests and Soil Conservation",
+  "Health Services",
+  "Hydrology and Meteorology",
+  "Immigration",
+  "Roads",
+  "Tourism",
+  "Transport Management",
+  "Water Supply",
+  "Nepal Electricity Authority",
+  "Survey",
+  "Urban Development and ",
+  "Environment",
+  "Mines and Geology",
+  " Quality Control",
+  "Livestock Services",
+  "Labour",
+  "Civil Registration",
+  "Customs",
+  "Nepal Police",
+  "Traffic Police",
+];
 
   @override
   void initState() {
