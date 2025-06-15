@@ -1,5 +1,5 @@
-## BhrastaBusters
-BhrastaBuster is an anonymous corruption reporting tool that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
+# BhrastaBusters
+BhrastaBuster is an anonymous corruption reporting tool app that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
 
 
 
@@ -38,12 +38,12 @@ Follow these simple steps to run the Flutter app and Python backend locally.
 git clone https://github.com/theaayushdev/BhrastaBusters.git
 cd BhrastaBusters
 ```
-###  Set up Flutter app
+### 2. Set up Flutter app
 ```bash
 flutter pub get
 flutter run
 ```
-### Set Up the Python Backend (Admin Panel)
+### 3. Set Up the Python Backend (Admin Panel)
 ```bash
 cd Backend
 ```
@@ -58,7 +58,7 @@ source venv/bin/activate
 python -m venv venv
 venv\Scripts\activate
 ```
-
+### 4. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
