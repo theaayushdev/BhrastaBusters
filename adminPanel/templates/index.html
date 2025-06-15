@@ -13,9 +13,11 @@
         }
 
         .container {
-            max-width: 1250px;
+            max-width: 100%;                    
             margin: 40px auto;
-            padding: 0 20px;
+            padding: 0 16px;                    
+            box-sizing: border-box;            
+            overflow-x: auto;                  
         }
 
         h1 {
@@ -30,6 +32,10 @@
             font-size: 16px;
             color: #6b7280;
             margin-bottom: 30px;
+        }
+
+        form {
+            margin-bottom: 16px;               
         }
 
         table {
@@ -103,6 +109,13 @@
         }
 
         @media (max-width: 768px) {
+q           table {
+                display: block;               
+                overflow-x: auto;              
+                white-space: nowrap;           
+            }
+
+
             table, th, td {
                 font-size: 12px;
             }
