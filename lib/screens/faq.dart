@@ -8,10 +8,10 @@ class FAQPage extends StatelessWidget {
     {
       'question': 'Is my identity kept secret?',
       'answer':
-          'Yes. BhrastaBusters ensures complete anonymity. We do not collect any personal information.',
+          'Yes. BhrastaBuster ensures complete anonymity. We do not collect any personal information.',
     },
     {
-      'question': 'How does BhrastaBusters work?',
+      'question': 'How does BhrastaBuster work?',
       'answer':
           'Users can report corruption anonymously. The report is sent to proper authorities for review.',
     },
@@ -28,11 +28,11 @@ class FAQPage extends StatelessWidget {
     {
       'question': 'Is this app free to use?',
       'answer':
-          'Yes. BhrastaBusters is completely free and made for the public good.',
+          'Yes. BhrastaBuster is completely free and made for the public good.',
     },
     {
       'question': 'Can I upload images or documents?',
-      'answer': 'Yes, you can add photo evidence while submitting your report.',
+      'answer': 'Yes, you can add photo and video evidence while submitting your report.',
     },
   ];
 
