@@ -6,7 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF003893),
+      backgroundColor: const Color(0xFF003893), 
       title: Row(
         children: [
           Image.asset(
@@ -14,12 +14,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             height: 60,
           ),
           const SizedBox(width: 10),
-          const Text(
-            'BhrastaBusters',
-            style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.w600, 
-              fontSize: 20,                
-              fontFamily: 'Roboto',),
+          const Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Bhrasta',
+                  style: TextStyle(
+                    color: Color(0xFFD81F26),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 28,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+                TextSpan(
+                  text: 'Buster',
+                  style: TextStyle(
+                    color: Colors.white, 
+                    fontWeight: FontWeight.w600,
+                    fontSize: 28,
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
