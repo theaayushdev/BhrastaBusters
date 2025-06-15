@@ -191,7 +191,7 @@ class _ReportPageState extends State<ReportPage> {
                             maxLines: 5,
                             decoration: InputDecoration(
                               hintText: "Describe the issue",
-                              labelText: "Description",
+                              labelText: "For eg : abc took bribe from me \nof rs 1000",
                               labelStyle: TextStyle(color: Colors.grey.shade800),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                               filled: true,
