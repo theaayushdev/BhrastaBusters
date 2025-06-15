@@ -1,23 +1,38 @@
-# BhrastaBusters
+### BhrastaBusters
+BhrastaBuster* is an anonymous corruption reporting tool that allows users to securely submit reports with descriptions, images/videos, and department details. Reports are analyzed for credibility using a machine learning model, and admins can monitor, update, and export reports via a dashboard.
 
-**BhrastaBusters** is a mobile application built using **Flutter** that allows users to report corruption anonymously and securely.  
-It features:
 
-- 📝 Corruption report submission with images
-- 📍 Department and district selector
-- 📞 Emergency contact info
-- 🧠 Awareness resources
-- 🛠️ Admin panel (built using Python & Flask) to view reports and stats
 
----
+## 🚀 Features
 
-## ⚙️ Getting Started
+### 🧑‍💻 User (Flutter App)
+- Generate a unique report token.
+- Submit corruption reports anonymously.
+- Attach image or video evidence.
+- Check report status using the token.
+- 
+### 🖥️ Admin (Flask Web App)
+- View all reports in a clean table.
+- Filter reports by department.
+- View and download attached media.
+- Update status of reports (e.g. pending, reviewed, solved).
+- Generate PDF reports.
+- Email individual report PDFs.
+- View department/district-wise report graphs.
+
+### 🧠 Machine Learning
+- Logistic Regression model trained on a labeled dataset.
+- TF-IDF vectorization using unigrams + bigrams.
+- Reports are scored for *credibility* (0–1).
+- Score is saved but hidden from users.
+
+## Getting Started
 
 Follow these simple steps to run the Flutter app and Python backend locally.
 
 ---
 
-🔧 1. Clone the Repository
+###1. Clone the Repository
 
 ```bash
 git clone https://github.com/theaayushdev/BhrastaBusters.git
@@ -32,13 +47,14 @@ flutter run
 ```bash
 cd Backend
 ```
-# For Linux/macOS
+### For Linux/macOS
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
+### For Windows
 ```bash
-# For Windows
+
 python -m venv venv
 venv\Scripts\activate
 ```
