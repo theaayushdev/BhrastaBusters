@@ -30,13 +30,13 @@ def view_reports():
     all_departments = [row[0] for row in cursor.fetchall()]
     if selected_department and selected_department != "All":
         cursor.execute("""
-            SELECT id, department, district, location, description, media, token, status, 
+            SELECT id, department, district, location, date, description, media, token, status, 
                    credibility_score, device_id, timestamp 
             FROM reports WHERE department = ?
         """, (selected_department,))
     else:
         cursor.execute("""
-        SELECT id, department, district, location, description, media, token, status, 
+        SELECT id, department, district, location, date, description, media, token, status, 
                credibility_score, device_id, timestamp 
         FROM reports
     """)
@@ -127,7 +127,7 @@ def generate_pdf(report_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, department, district, location, description, media, token, status, credibility_score, timestamp 
+        SELECT id, department, district, location, date, description, media, token, status, credibility_score, timestamp 
         FROM reports
         WHERE id = ?
     """, (report_id,))
@@ -163,6 +163,7 @@ def generate_pdf(report_id):
         <p><strong>Department:</strong> {{ r[1] }}</p>
         <p><strong>District:</strong> {{ r[2] }}</p>
         <p><strong>Location:</strong> {{ r[3] }}</p>
+        <li><strong>Date:</strong> {report[4]}</li> 
         <p><strong>Description:</strong> {{ r[4] }}</p>
         <p><strong>Status:</strong> {{ r[7] }}</p>
         <p><strong>Credibility Score:</strong> {{ r[8] }}</p>
@@ -197,7 +198,7 @@ def send_report_email(report_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, department, district, location, description, media
+        SELECT id, department, district, location, date, description, media
         FROM reports
         WHERE id = ?
     """, (report_id,))
@@ -227,6 +228,7 @@ def send_report_email(report_id):
         <p><strong>Department:</strong> {{ r[1] }}</p>
         <p><strong>District:</strong> {{ r[2] }}</p>
         <p><strong>Location:</strong> {{ r[3] }}</p>
+        <li><strong>Date:</strong> {report[4]}</li> 
         <p><strong>Description:</strong> {{ r[4] }}</p>
         {% if image_base64 %}<p><strong>Attached Media:</strong></p>
         <img src="data:image/jpeg;base64,{{ image_base64 }}">{% endif %}
