@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _fetchTokenAndNavigate() async {
     try {
       final response = await http.get(
-        Uri.parse('http://172.16.3.155:5000/GenerateToken'),
+        Uri.parse('http://172.16.3.254:5000/GenerateToken'),
       );
 
       if (response.statusCode == 200) {
