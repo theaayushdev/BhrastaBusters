@@ -1,16 +1,27 @@
-# bhrastabusters
+# 🚨 BhrastaBusters
 
-A new Flutter project.
+**BhrastaBusters** is a mobile application built using **Flutter** that allows users to report corruption anonymously and securely. It includes features like report submission with images, department and district selection, emergency contacts, and an admin panel built using **Python (Flask)** for visualizing reports.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ⚙️ Installing Dependencies
 
-A few resources to get you started if this is your first Flutter project:
+### 🔹 1. Clone the Repository
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+git clone https://github.com/theaayushdev/BhrastaBusters.git
+cd BhrastaBusters
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+flutter pub get
+
+flutter run
+
+cd Backend
+
+python3 -m venv venv
+source venv/bin/activate  # For Linux/macOS
+venv\Scripts\activate     # For Windows
+
+pip install -r requirements.txt
+
+python admin.py
