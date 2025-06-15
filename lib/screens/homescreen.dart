@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     'assets/pic2.png',
     'assets/pic3.png',
     'assets/pic4.png',
-
   ];
 
   int _selectedIndex = 0;
@@ -55,12 +54,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
     });
   }
+
   void _navigateToStatusPage() {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const StatusPage()),
-  );
-}
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const StatusPage()),
+    );
+  }
 
   @override
   void dispose() {
@@ -92,119 +92,78 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _onNavItemTapped(int index) {
-  switch (index) {
-    case 0:
-      setState(() {
-        _selectedIndex = index;
-      });
-      break;
-    case 1:
-      Navigator.push(context, MaterialPageRoute(builder: (_) => AwarenessPage()));
-      break;
-    case 2:
-      Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
-      break;
-    case 3:
-      Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
-      break;
+    switch (index) {
+      case 0:
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+      case 1:
+        Navigator.push(context, MaterialPageRoute(builder: (_) => AwarenessPage()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
+        break;
+      case 3:
+        Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
+        break;
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
 
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.white),
-              child: Text(
-                'BhrastaBuster',
-                style: TextStyle(color: Color(0xFF003893), fontSize: 24),
+      drawer: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Colors.white,
+        ),
+        child: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(color: Colors.white),
+                child: Text(
+                  'Navigation',
+                  style: TextStyle(color: Color(0xFF003893), fontSize: 24),
+                ),
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home, color: Color(0xFF003893)),
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _selectedIndex = 0;
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info, color: Color(0xFF003893)),
-              title: const Text('Emergency Info'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
-              title: const Text('FAQ'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
-              },
-            ),
-          ],
-
-     drawer: Theme(
-  data: Theme.of(context).copyWith(
-    canvasColor: Colors.white, // Force white background
-  ),
-  child: Drawer(
-    child: ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Text(
-            'Navigation',
-            style: TextStyle(color: Color(0xFF003893), fontSize: 24),
+              ListTile(
+                leading: const Icon(Icons.home, color: Color(0xFF003893)),
+                title: const Text('Home'),
+                onTap: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    _selectedIndex = 0;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.info, color: Color(0xFF003893)),
+                title: const Text('Emergency Info'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
+                title: const Text('FAQ'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
+                },
+              ),
+            ],
           ),
-
         ),
-        ListTile(
-          leading: const Icon(Icons.home, color: Color(0xFF003893)),
-          title: const Text('Home'),
-          onTap: () {
-            Navigator.pop(context);
-            setState(() {
-              _selectedIndex = 0;
-            });
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.info, color: Color(0xFF003893)),
-          title: const Text('Emergency Info'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => Emergency()));
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.question_answer, color: Color(0xFF003893)),
-          title: const Text('FAQ'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (_) => FAQPage()));
-          },
-        ),
-      ],
-    ),
-  ),
-),
+      ),
 
       body: _selectedIndex == 0
           ? Stack(
               children: [
-             
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Opacity(
@@ -219,41 +178,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-
-            
                 SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 12),
-
-                      
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(16),
-    child: SizedBox(
-      height: 210,
-      width: double.infinity, 
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: _imagePaths.length,
-        itemBuilder: (context, index) {
-          return Image.asset(
-            _imagePaths[index],
-            fit: BoxFit.cover, 
-            width: double.infinity,
-          );
-        },
-      ),
-    ),
-  ),
-),
-
-
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            height: 210,
+                            width: double.infinity,
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: _imagePaths.length,
+                              itemBuilder: (context, index) {
+                                return Image.asset(
+                                  _imagePaths[index],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 30),
-
-                      
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Center(
@@ -308,13 +259,10 @@ Padding(
                           ),
                         ),
                       ),
-
-                      const SizedBox(height: 200), 
+                      const SizedBox(height: 200),
                     ],
                   ),
                 ),
-
-                
                 Positioned(
                   bottom: MediaQuery.of(context).size.height * 0.085,
                   left: 0,
@@ -346,6 +294,7 @@ Padding(
               ],
             )
           : Container(),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF003893),
@@ -354,7 +303,7 @@ Padding(
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Awareness'),
+          BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Awareness'),
           BottomNavigationBarItem(icon: Icon(Icons.emergency), label: 'Emergency'),
           BottomNavigationBarItem(icon: Icon(Icons.question_answer), label: 'FAQ'),
         ],
