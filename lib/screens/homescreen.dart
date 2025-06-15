@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             const DrawerHeader(
               decoration: BoxDecoration(color: Colors.white),
               child: Text(
-                'Navigation',
+                'BhrastaBuster',
                 style: TextStyle(color: Color(0xFF003893), fontSize: 24),
               ),
             ),
