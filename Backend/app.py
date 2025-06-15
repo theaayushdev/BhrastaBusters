@@ -53,7 +53,7 @@ def generate_token():
 
 
 @app.route("/report", methods=["POST"])
-# @limiter.limit("3 per day") 
+@limiter.limit("3 per day") 
 def submit_report():
     try:
         # Get uploaded image from form 
